@@ -15,11 +15,16 @@ gameBoard = ones(24,10);
 %Creating a test piece.
 gameBoard(3,5) = 2; gameBoard(3,6) = 3; gameBoard(3,7) = 4; gameBoard(4,6) = 2;
 
-%Initializing the game scene. The scene must be drawn once before the game loop.
+%Initializing the game scene. The scene must be drawn once before the game loop and before callback methods can be set.
 drawScene(gameScene, gameBoard);
 
-%Creating the main game loop. 
-%Due to an edit in simpleGameEngine.m playing=false when the x button is pressed.
+%Setting callback methods for keypress and window close events. (Handeled with functions at the bottom of the script).
+set(gameScene.my_figure, 'KeyPressFcn', @keyPressEvent);
+set(gameScene.my_figure, 'CloseRequestFcn', @closeCallback);
+set(gameScene.my_figure, 'MenuBar', 'none');
+
+%Starting the main game loop. 
+%playing will become true when the game window is closed.
 playing = true;
 while playing
     tic;
@@ -34,7 +39,18 @@ while playing
     %This pause gets a consistent 0.1 second game loop.
     pause(0.1-toc);
     
-    %disp(toc);  %UNCOMMENT THIS LINE TO SEE THAT WE ARE RUNNING AT 1 LOOP EVERY 0.1 SECONDS.
+    %fprintf("Time from last render loop: %.4f\n", toc);  %UNCOMMENT THIS LINE TO SEE THAT WE ARE RUNNING AT 1 LOOP EVERY 0.1 SECONDS.
 end
 
-clear; clc;
+%TODO UNCCOMENT: clear; clc;
+
+%Handels key events. (When a key is pressed this function is called).
+function keyPressEvent(src, event)
+    disp(event.Key);
+end
+
+%Handels window close events. (When the window is closed this function is called).
+function closeCallback(src,event)
+    assignin('base', 'playing', false);
+    delete(src);
+end

@@ -166,15 +166,12 @@ classdef simpleGameEngine < handle
             if isempty(obj.my_figure) || ~isvalid(obj.my_figure)
                 % inititalize figure
                 obj.my_figure = figure();
-                
-                set(obj.my_figure, 'MenuBar', 'none'); %XANDER SPECIAL
-                set(obj.my_figure, 'CloseRequestFcn', @closeCallback); %XANDER SPEICAL
 
                 % set guidata to the  key press and release functions,
                 % this allows keeping track of what key has been pressed
                 obj.my_figure.KeyPressFcn = @(src,event)guidata(src,event.Key);
                 obj.my_figure.KeyReleaseFcn = @(src,event)guidata(src,0);
-                
+
                 % actually display the image to the figure
                 obj.my_image = imshow(big_scene_data,'InitialMagnification', 100);
                 
@@ -257,11 +254,4 @@ classdef simpleGameEngine < handle
             end
         end
     end
-end
-
-%XANDER SPECIAL
-function closeCallback(src,event)
-    disp("Closing");
-    assignin('base', 'playing', false);
-    delete(src);
 end
