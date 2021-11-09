@@ -1,0 +1,30 @@
+%RUN THIS FILE TO START THE GAME
+
+%Developed by Danny, Matt, and Xander. Engineering 1181 SDP.
+
+clear; clc;
+
+fprintf("Engineering 1181 SDP: Tetris V:0.0.1\n");
+
+%The main game scene. This will need to be drawn to every frame.
+gameScene = simpleGameEngine('Tiles.png',32,32,5);
+
+%The main game board. Initialized to a blank board.
+gameBoard = zeros()
+
+drawScene(gameScene, gameBoard);
+
+playing = true;
+while playing
+    drawScene(gameScene, gameBoard);
+
+    gameBoardLevel24 = gameBoard(24,:);
+    for i = 24:-1:2
+        gameBoard(i,:) = gameBoard(i-1,:);
+    end
+    gameBoard(1,:) = gameBoardLevel24;
+
+    pause(0.06);
+end
+
+clear; clc;
