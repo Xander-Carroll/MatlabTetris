@@ -16,12 +16,12 @@ classdef Tetromino
             %TETRAMINO Construct an instance of this class
             %   Detailed explanation goes here
             
-            obj.type = randi(1,7);
+            obj.type = randi(7);
             
             switch obj.type
                 case 1
                     obj.color = 2; %Line   Piece
-                    obj.locations = [[2,4],[2,5],[2,6],[2,7]];
+                    obj.locations = [[1,4],[1,5],[1,6],[1,7]];
                     obj.left = 4;
                     obj.right = 7;
                 case 2
