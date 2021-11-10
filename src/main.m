@@ -10,6 +10,7 @@ fprintf("Engineering 1181 SDP: Tetris V:0.0.1\n");
 gameScene = simpleGameEngine('../res/Tiles.png',32,32,5, [255,255,255]);
 
 %The main game board. Initialized to a blank board. (Using ints instead of doubles for better memory management).
+gameForeground = uint8(ones(20,10)); gameForeground(3,:) = 8;
 gameBoard = uint8(ones(20,10));
 
 %Creating a test piece.
@@ -31,7 +32,7 @@ while playing
     tic;
 
     %Rendering the game scene.
-    drawScene(gameScene, gameBoard);
+    drawScene(gameScene, gameForeground,gameBoard);
 
     
     %DO GAME LOGIC HERE.
