@@ -171,6 +171,8 @@ classdef simpleGameEngine < handle
                 % this allows keeping track of what key has been pressed
                 obj.my_figure.KeyPressFcn = @(src,event)guidata(src,event.Key);
                 obj.my_figure.KeyReleaseFcn = @(src,event)guidata(src,0);
+                
+                set(obj.my_figure, 'MenuBar', 'none'); %XANDER SPECIAL.
 
                 % actually display the image to the figure
                 obj.my_image = imshow(big_scene_data,'InitialMagnification', 100);
