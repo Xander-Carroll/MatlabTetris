@@ -45,6 +45,25 @@ end
 
 %TODO UNCCOMENT: clear; clc;
 
+%Takes the gameBoard as a parameter and returns the gameBoard with any completed lines cleared.
+function[outBoard] = clearBoardLines(inBoard)
+    outBoard = inBoard;
+
+    for y = (1:20)
+        lineClear = true;
+        for x = (1:10)
+            if(inBoard(y,x) == 1)
+                lineClear = false;
+            end
+        end
+
+        if lineClear
+            outBoard((2:y),:) = outBoard((1:y-1), :);
+            outBoard(1,:) = uint8(ones(1,10));
+        end
+    end
+end
+
 %Handels key events. (When a key is pressed this function is called).
 function keyPressEvent(~, event)
     disp(event.Key);
