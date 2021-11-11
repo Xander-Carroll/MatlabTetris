@@ -43,18 +43,14 @@ while playing
 
     key_down = guidata(gameScene.my_figure);
     if(key_down)
+        gameBoard = eraseTetro(tetro, gameBoard);
     
         if isequal(key_down, 'a') || isequal(key_down, 'leftarrow')
-            gameBoard = eraseTetro(tetro, gameBoard);
             tetro.move(-1);
         elseif isequal(key_down, 'd') || isequal(key_down, 'rightarrow')
-            gameBoard = eraseTetro(tetro, gameBoard);
             tetro.move(1);
         elseif isequal(key_down, 'f1')
-            tetro.MaxTicsUntilFall = tetro.MaxTicsUntilFall - 1;
-            fprintf("[DEBUG]: %i\n", tetro.MaxTicsUntilFall);
-        elseif isequal(key_down, 'f2')
-            tetro = Tetromino();
+
         elseif isequal(key_down, 'escape')
             close(gameScene.my_figure);
             playing = false;
