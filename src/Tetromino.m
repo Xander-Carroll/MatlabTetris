@@ -103,6 +103,13 @@ classdef Tetromino < handle
                         obj.left = obj.left + 1;
                         obj.right = obj.right + 1;
                     end
+                case 2
+                    if obj.bottom - 1 >= 1
+                        for i = 1:2:8
+                            obj.locations(i) = obj.locations(i) - 1;
+                        end
+                        obj.bottom = obj.bottom - 1;
+                    end
             end
         end
 

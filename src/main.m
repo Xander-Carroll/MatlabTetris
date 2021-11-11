@@ -56,7 +56,10 @@ function keyPressEvent(~, event, tetro)
         tetro.move(-1)
     elseif event.Key == 'd'
         tetro.move(1)
+    elseif event.Key == 'w'
+        tetro.move(2)
     end
+
     gameBoard = drawTetro(tetro, gameBoard);
 end
 
