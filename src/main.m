@@ -66,6 +66,7 @@ while playing
     %This pause limits the fps based on the framerate variable.
     pause(1/framerate-toc);
     %fprintf("Framerate: %f\n", 1/toc); %Unccoment this line to see framerate.
+end
 
 %TODO UNCCOMENT: clear; clc;
 
