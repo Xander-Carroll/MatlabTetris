@@ -9,8 +9,11 @@ classdef Tetromino < handle
         left
         right
         bottom
+
+        MaxTicsUntilFall = 5;
+        ticsUntilFall = 5;
     end
-    
+
     methods
         function obj = Tetromino()
             %TETRAMINO Construct an instance of this class
@@ -89,6 +92,13 @@ classdef Tetromino < handle
                         obj.right = obj.right - 1;
                     end
                 case 0
+                    if obj.ticsUntilFall > 0
+                        obj.ticsUntilFall = obj.ticsUntilFall - 1;
+                        return;
+                    else
+                        obj.ticsUntilFall = obj.MaxTicsUntilFall;
+                    end
+                    
                     if obj.bottom + 1 <= 20
                         for i = 1:2:8
                             obj.locations(i) = obj.locations(i) + 1;
