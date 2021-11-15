@@ -29,6 +29,12 @@ set(gameScene.my_figure, 'CloseRequestFcn', @closeCallback);
 %The main game framerate target. (If you set the framerate too high the game won't close).
 framerate = 10; 
 
+%Piece Speed
+pieceSpeed = 5;
+
+%Was key pressed variable
+wasKeyJustPressed = false;
+
 playing = true;
 while playing
     tic;
@@ -36,31 +42,46 @@ while playing
     %Rendering the game scene.
     drawScene(gameScene, gameBoard);
 
-    %DO GAME LOGIC HERE.
+    %Moving the tetromino down.
     gameBoard = eraseTetro(tetro, gameBoard);
     tetro.move(0);
     gameBoard = drawTetro(tetro, gameBoard);
 
+    %Handling user input.
     key_down = guidata(gameScene.my_figure);
     if(key_down)
-    
+        wasKeyJustPressed = true;
         if isequal(key_down, 'a') || isequal(key_down, 'leftarrow')
             gameBoard = eraseTetro(tetro, gameBoard);
             tetro.move(-1);
         elseif isequal(key_down, 'd') || isequal(key_down, 'rightarrow')
             gameBoard = eraseTetro(tetro, gameBoard);
             tetro.move(1);
-        elseif isequal(key_down, 'f1')
-            tetro.MaxTicsUntilFall = tetro.MaxTicsUntilFall - 1;
-            fprintf("[DEBUG]: %i\n", tetro.MaxTicsUntilFall);
-        elseif isequal(key_down, 'f2')
-            tetro = Tetromino();
+        elseif isequal(key_down, 's') || isequal(key_down, 'downarrow')
+            tetro.maxTicsUntilFall = 0;
+            tetro.ticsUntilFall = 0;
         elseif isequal(key_down, 'escape')
             close(gameScene.my_figure);
             playing = false;
+        
+        %Temporary key input used for debuging.
+        elseif isequal(key_down, 'f1')
+            pieceSpeed = pieceSpeed - 1;
+            tetro.maxTicsUntilFall = pieceSpeed;
+            fprintf("[DEBUG]: New Piece Speed = %i\n", pieceSpeed);
+        elseif isequal(key_down, 'f2')
+            tetro = Tetromino();
+            fprintf("[DEBUG]: Piece Created\n");
         end
-
+        
+        %Drawing the tetromino after any movement changes were made.
         gameBoard = drawTetro(tetro, gameBoard);
+    else
+        if wasKeyJustPressed
+            tetro.maxTicsUntilFall = pieceSpeed;
+            tetro.ticsUntilFall = pieceSpeed;
+            wasKeyJustPressed = false;
+        end
     end
 
     %This pause limits the fps based on the framerate variable.
