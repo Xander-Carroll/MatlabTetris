@@ -8,6 +8,8 @@ classdef Tetromino < handle
         locations
         left
         right
+
+        top
         bottom
 
         MaxTicsUntilFall = 5;
@@ -29,6 +31,7 @@ classdef Tetromino < handle
                     
                     obj.left = 4;
                     obj.right = 7;
+                    obj.top = 1;
                     obj.bottom = 1;
  
                 case 2 %Square Piece
@@ -37,6 +40,7 @@ classdef Tetromino < handle
                     
                     obj.left = 5;
                     obj.right = 6;
+                    obj.top = 1;
                     obj.bottom = 2;
  
                 case 3 %Left L Piece
@@ -45,6 +49,7 @@ classdef Tetromino < handle
                     
                     obj.left = 4;
                     obj.right = 6;
+                    obj.top = 1;
                     obj.bottom = 2;
  
                 case 4 %Right L Piece
@@ -53,6 +58,7 @@ classdef Tetromino < handle
                     
                     obj.left = 4;
                     obj.right = 6;
+                    obj.top = 1;
                     obj.bottom = 2;
  
                 case 5 %Left Zig-Zag Piece
@@ -61,6 +67,7 @@ classdef Tetromino < handle
                     
                     obj.left = 4;
                     obj.right = 7;
+                    obj.top = 1;
                     obj.bottom = 2;
  
                 case 6 %Right Zig-Zag Piece
@@ -69,14 +76,18 @@ classdef Tetromino < handle
                     
                     obj.left = 4;
                     obj.right = 6;
+                    obj.top = 1;
                     obj.bottom = 2;
+
                 case 7 %T-Shape Piece
                     obj.color = 7;
                     obj.locations = [[1,5],[2,4],[2,5],[2,6]];
                     
                     obj.left = 4;
                     obj.right = 6;
+                    obj.top = 1;
                     obj.bottom = 2;
+
             end
             
         end
@@ -84,9 +95,11 @@ classdef Tetromino < handle
         function gameboard = move(obj, dir, gameboard)
             pre = Tetromino().copytetro(obj);
             
+            collided = checkCollide(obj,gameboard,dir);
+
             switch dir
                 case 'l' % move left
-                    if obj.left - 1 >= 1
+                    if obj.left - 1 >= 1 && ~collided
                         for i = 2:2:8
                             obj.locations(i) = obj.locations(i) - 1;
                         end
@@ -101,14 +114,15 @@ classdef Tetromino < handle
                         obj.ticsUntilFall = obj.MaxTicsUntilFall;
                     end
                     
-                    if obj.bottom + 1 <= 20
+                    if obj.bottom + 1 <= 20 && ~collided
                         for i = 1:2:8
                             obj.locations(i) = obj.locations(i) + 1;
                         end
+                        obj.top = obj.top + 1;
                         obj.bottom = obj.bottom + 1;
                     end
                 case 'r' % move right
-                    if obj.right + 1 <= 10
+                    if obj.right + 1 <= 10 && ~collided
                         for i = 2:2:8
                             obj.locations(i) = obj.locations(i) + 1;
                         end
@@ -126,10 +140,50 @@ classdef Tetromino < handle
             obj.locations = tetro.locations;
             obj.left = tetro.left;
             obj.right = tetro.right;
+            obj.top = tetro.top;
             obj.bottom = tetro.bottom;
     
             obj.MaxTicsUntilFall = tetro.MaxTicsUntilFall;
             obj.ticsUntilFall = tetro.ticsUntilFall;
         end
+
     end
+end
+
+function isCollide = checkCollide(obj, gameboard, dir)
+            loc = obj.locations;   
+            board = gameboard.board;
+            
+            if (max(loc) == 20) || (min(loc) == 1 && dir == 'l')
+                isCollide = false;
+                return;
+            end
+            
+            switch dir
+                case 'l'
+                    for i = 1:2:8
+                        if board(loc(i), loc(i+1) - 1) ~= 1 && board(loc(i), loc(i+1) - 1) ~= obj.color
+                            isCollide = true;
+                            return
+                        end
+                    end
+                
+                case 'd'
+                    for i = 1:2:8
+                        if board(loc(i) + 1, loc(i+1)) ~= 1 && board(loc(i) + 1, loc(i+1)) ~= obj.color
+                            isCollide = true;
+                            return
+                        end
+                    end
+                
+                case 'r'
+                    for i = 1:2:8
+                        if board(loc(i), loc(i+1) + 1) ~= 1 && board(loc(i), loc(i+1) + 1) ~= obj.color
+                            isCollide = true;
+                            return
+                        end
+                    end
+            end
+
+            isCollide = false;
 end
