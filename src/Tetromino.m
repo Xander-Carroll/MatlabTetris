@@ -81,7 +81,7 @@ classdef Tetromino < handle
             
         end
         
-        function result = move(obj, dir, gameboard)
+        function gameboard = move(obj, dir, gameboard)
             pre = obj;
             
             switch dir
@@ -92,8 +92,6 @@ classdef Tetromino < handle
                         end
                         obj.left = obj.left - 1;
                         obj.right = obj.right - 1;
-                        
-                        result = gameboard.update(pre, obj);
                     end
                 case 'd' % move down
                     if obj.ticsUntilFall > 0
@@ -108,8 +106,6 @@ classdef Tetromino < handle
                             obj.locations(i) = obj.locations(i) + 1;
                         end
                         obj.bottom = obj.bottom + 1;
-                    
-                        result = gameboard.update(pre, obj);
                     end
                 case 'r' % move right
                     if obj.right + 1 <= 10
@@ -118,11 +114,9 @@ classdef Tetromino < handle
                         end
                         obj.left = obj.left + 1;
                         obj.right = obj.right + 1;
-                        
-                        result = gameboard.update(pre, obj);
                     end
-
             end
+            gameboard.update(pre, obj);
         end
 
     end

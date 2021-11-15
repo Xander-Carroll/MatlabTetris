@@ -25,8 +25,10 @@ classdef GameBoard
             loc = post.locations;
             
             for i = 1:2:8
-                obj.board(loc(i),loc(i+1)) = tetro.color;
+                obj.board(loc(i),loc(i+1)) = post.color;
             end
+
+            disp(obj.board)
         end
         
     end

@@ -37,16 +37,16 @@ while playing
     drawScene(gameScene, gameBoard.board);
 
     %DO GAME LOGIC HERE.
-    gameBoard = tetro.move('d');
+    gameBoard = tetro.move('d', gameBoard);
     
     key_down = guidata(gameScene.my_figure);
     if(key_down)
     
         if isequal(key_down, 'a') || isequal(key_down, 'leftarrow')
-            gameBoard = tetro.move('l');
+            gameBoard = tetro.move('l', gameBoard);
         
         elseif isequal(key_down, 'd') || isequal(key_down, 'rightarrow')
-            gameBoard = tetro.move('r');
+            gameBoard = tetro.move('r', gameBoard);
             
         elseif isequal(key_down, 'f1')
             tetro.MaxTicsUntilFall = tetro.MaxTicsUntilFall - 1;
