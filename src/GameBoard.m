@@ -28,7 +28,6 @@ classdef GameBoard
                 obj.board(loc(i),loc(i+1)) = post.color;
             end
 
-            disp(obj.board)
         end
         
     end

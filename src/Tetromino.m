@@ -82,7 +82,7 @@ classdef Tetromino < handle
         end
         
         function gameboard = move(obj, dir, gameboard)
-            pre = obj;
+            pre = Tetromino().copytetro(obj);
             
             switch dir
                 case 'l' % move left
@@ -116,8 +116,20 @@ classdef Tetromino < handle
                         obj.right = obj.right + 1;
                     end
             end
-            gameboard.update(pre, obj);
-        end
 
+            gameboard = gameboard.update(pre, obj);
+        end
+        
+        function obj = copytetro(obj, tetro)
+            obj.type = tetro.type;
+            obj.color = tetro.color;
+            obj.locations = tetro.locations;
+            obj.left = tetro.left;
+            obj.right = tetro.right;
+            obj.bottom = tetro.bottom;
+    
+            obj.MaxTicsUntilFall = tetro.MaxTicsUntilFall;
+            obj.ticsUntilFall = tetro.ticsUntilFall;
+        end
     end
 end

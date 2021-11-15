@@ -60,7 +60,6 @@ while playing
             playing = false;
         
         end
-        
     end
 
     %This pause limits the fps based on the framerate variable.
@@ -68,7 +67,7 @@ while playing
     %fprintf("Framerate: %f\n", 1/toc); %Unccoment this line to see framerate.
 end
 
-%TODO UNCCOMENT: clear; clc;
+%TODO UNCOMMENT: clear; clc;
 
 %Handels window close events. (When the window is closed this function is called).
 function closeCallback(src, ~)
