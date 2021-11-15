@@ -154,11 +154,11 @@ function isCollide = checkCollide(obj, gameboard, dir)
         
     xs = loc(2:2:8);
     ys = loc(1:2:8);
-    if (min(xs) == 1 && dir == 'l') || (max(xs) == 10 && dir == 'r')
+    if (min(xs) == 1 && isequal(dir, 'l')) || (max(xs) == 10 && isequal(dir, 'r'))
         isCollide = false;
         return;
     end
-    if (max(ys) == 20 && dir == 'd') 
+    if (max(ys) == 20 && isequal(dir, 'd')) 
         isCollide = true;
         return;
     end
