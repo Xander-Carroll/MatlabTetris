@@ -13,6 +13,9 @@ gameScene = simpleGameEngine('../res/Tiles.png',32,32,5, [255,255,255]);
 global gameBoard
 gameBoard = GameBoard();
 
+global collided
+collided = false;
+
 %Creating a test piece.
 %gameBoard(3,5) = 3; gameBoard(3,6) = 3; gameBoard(3,7) = 3; gameBoard(4,6) = 3;
 tetro = Tetromino(); tetroLoc = tetro.locations;
@@ -32,21 +35,26 @@ framerate = 10;
 playing = true;
 while playing
     tic;
+    
+    if collided
+        tetro = tetro.copytetro(Tetromino());
+        collided = false;
+    end
 
     %Rendering the game scene.
     drawScene(gameScene, gameBoard.board);
 
     %DO GAME LOGIC HERE.
-    gameBoard = tetro.move('d', gameBoard);
+    [gameBoard, collided] = tetro.move('d', gameBoard);
     
     key_down = guidata(gameScene.my_figure);
     if(key_down)
     
         if isequal(key_down, 'a') || isequal(key_down, 'leftarrow')
-            gameBoard = tetro.move('l', gameBoard);
+            [gameBoard, collided] = tetro.move('l', gameBoard);
         
         elseif isequal(key_down, 'd') || isequal(key_down, 'rightarrow')
-            gameBoard = tetro.move('r', gameBoard);
+            [gameBoard, collided] = tetro.move('r', gameBoard);
             
         elseif isequal(key_down, 'f1')
             tetro.MaxTicsUntilFall = tetro.MaxTicsUntilFall - 1;

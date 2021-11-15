@@ -66,7 +66,7 @@ classdef Tetromino < handle
                     obj.locations = [[1,5],[1,6],[2,4],[2,5]];
                     
                     obj.left = 4;
-                    obj.right = 7;
+                    obj.right = 6;
                     obj.top = 1;
                     obj.bottom = 2;
  
@@ -92,11 +92,11 @@ classdef Tetromino < handle
             
         end
         
-        function gameboard = move(obj, dir, gameboard)
+        function [gameboard, collided] = move(obj, dir, gameboard)
             pre = Tetromino().copytetro(obj);
             
             collided = checkCollide(obj,gameboard,dir);
-
+            
             switch dir
                 case 'l' % move left
                     if obj.left - 1 >= 1 && ~collided
@@ -154,15 +154,33 @@ function isCollide = checkCollide(obj, gameboard, dir)
             loc = obj.locations;   
             board = gameboard.board;
             
-            if (max(loc) == 20) || (min(loc) == 1 && dir == 'l')
+            xs = loc(2:2:8);
+            ys = loc(1:2:8);
+
+            if (min(xs) == 1 && dir == 'l') || (max(xs) == 10 && dir == 'r')
                 isCollide = false;
                 return;
             end
-            
+
+            if (max(ys) == 20 && dir == 'd') 
+                isCollide = true;
+                return;
+            end
+
             switch dir
                 case 'l'
                     for i = 1:2:8
-                        if board(loc(i), loc(i+1) - 1) ~= 1 && board(loc(i), loc(i+1) - 1) ~= obj.color
+
+                        cont = false;
+                        for x = 1:2:8 % excluding itself
+                            if x == i; continue; end
+                            if (loc(i) == loc(x)) && (loc(i + 1) - 1 == loc(x + 1))
+                                cont = true;
+                            end
+                        end
+                        if cont; continue; end
+
+                        if board(loc(i), loc(i+1) - 1) ~= 1
                             isCollide = true;
                             return
                         end
@@ -170,7 +188,17 @@ function isCollide = checkCollide(obj, gameboard, dir)
                 
                 case 'd'
                     for i = 1:2:8
-                        if board(loc(i) + 1, loc(i+1)) ~= 1 && board(loc(i) + 1, loc(i+1)) ~= obj.color
+                        
+                        cont = false;
+                        for x = 1:2:8 % excluding itself
+                            if x == i; continue; end
+                            if (loc(i) + 1 == loc(x)) && (loc(i + 1) == loc(x + 1))
+                                cont = true;
+                            end
+                        end
+                        if cont; continue; end
+                        
+                        if board(loc(i) + 1, loc(i+1)) ~= 1
                             isCollide = true;
                             return
                         end
@@ -178,7 +206,17 @@ function isCollide = checkCollide(obj, gameboard, dir)
                 
                 case 'r'
                     for i = 1:2:8
-                        if board(loc(i), loc(i+1) + 1) ~= 1 && board(loc(i), loc(i+1) + 1) ~= obj.color
+                        
+                        cont = false;
+                        for x = 1:2:8 % excluding itself
+                            if x == i; continue; end
+                            if (loc(i) == loc(x)) && (loc(i + 1) + 1 == loc(x + 1))
+                                cont = true;
+                            end
+                        end
+                        if cont; continue; end
+                        
+                        if board(loc(i), loc(i+1) + 1) ~= 1
                             isCollide = true;
                             return
                         end
