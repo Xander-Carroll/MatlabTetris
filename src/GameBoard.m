@@ -3,21 +3,32 @@ classdef GameBoard
     %   Detailed explanation goes here
     
     properties
-        Property1
+        board
     end
     
     methods
-        function obj = GameBoard(inputArg1,inputArg2)
+        function obj = GameBoard()
             %GAMEBOARD Construct an instance of this class
             %   Detailed explanation goes here
-            obj.Property1 = inputArg1 + inputArg2;
+            obj.board = uint8(ones(20,10));
         end
         
-        function outputArg = method1(obj,inputArg)
-            %METHOD1 Summary of this method goes here
-            %   Detailed explanation goes here
-            outputArg = obj.Property1 + inputArg;
+        
+        
+        function obj = update(obj, pre, post)
+            loc = pre.locations;
+            
+            for i = 1:2:8
+                obj.board(loc(i),loc(i+1)) = 1;
+            end
+            
+            loc = post.locations;
+            
+            for i = 1:2:8
+                obj.board(loc(i),loc(i+1)) = tetro.color;
+            end
         end
+        
     end
 end
 
