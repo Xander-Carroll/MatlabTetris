@@ -11,14 +11,17 @@ gameScene = simpleGameEngine('../res/Tiles.png',32,32,5, [255,255,255]);
 
 %The main game board. Initialized to a blank board. (Using ints instead of doubles for better memory management).
 global gameBoard
-gameBoard = uint8(ones(20,10));
+gameBoard = GameBoard();
+
+global collided
+collided = false;
 
 %Creating a test piece.
 %gameBoard(3,5) = 3; gameBoard(3,6) = 3; gameBoard(3,7) = 3; gameBoard(4,6) = 3;
 tetro = Tetromino(); tetroLoc = tetro.locations;
 
 %Initializing the game scene. The scene must be drawn once before the game loop and before callback methods can be set.
-drawScene(gameScene, gameBoard);
+drawScene(gameScene, gameBoard.board);
 
 %Setting callback methods for keypress and window close events. (Handeled with functions at the bottom of the script).
 set(gameScene.my_figure, 'CloseRequestFcn', @closeCallback);
@@ -38,28 +41,32 @@ wasKeyJustPressed = false;
 playing = true;
 while playing
     tic;
+    
+    if collided
+        tetro = tetro.copytetro(Tetromino());
+        collided = false;
+    end
 
     %Rendering the game scene.
-    drawScene(gameScene, gameBoard);
+    drawScene(gameScene, gameBoard.board);
 
     %Moving the tetromino down.
-    gameBoard = eraseTetro(tetro, gameBoard);
-    tetro.move(0);
-    gameBoard = drawTetro(tetro, gameBoard);
+    [gameBoard, collided] = tetro.move('d', gameBoard);
 
     %Handling user input.
     key_down = guidata(gameScene.my_figure);
     if(key_down)
         wasKeyJustPressed = true;
         if isequal(key_down, 'a') || isequal(key_down, 'leftarrow')
-            gameBoard = eraseTetro(tetro, gameBoard);
-            tetro.move(-1);
+            [gameBoard, collided] = tetro.move('l', gameBoard);
+        
         elseif isequal(key_down, 'd') || isequal(key_down, 'rightarrow')
-            gameBoard = eraseTetro(tetro, gameBoard);
-            tetro.move(1);
+            [gameBoard, collided] = tetro.move('r', gameBoard);
+        
         elseif isequal(key_down, 's') || isequal(key_down, 'downarrow')
             tetro.maxTicsUntilFall = 0;
-            tetro.ticsUntilFall = 0;
+            tetro.ticsUntilFall = 0;   
+        
         elseif isequal(key_down, 'escape')
             close(gameScene.my_figure);
             playing = false;
@@ -74,8 +81,6 @@ while playing
             fprintf("[DEBUG]: Piece Created\n");
         end
         
-        %Drawing the tetromino after any movement changes were made.
-        gameBoard = drawTetro(tetro, gameBoard);
     else
         if wasKeyJustPressed
             tetro.maxTicsUntilFall = pieceSpeed;
@@ -89,24 +94,10 @@ while playing
     %fprintf("Framerate: %f\n", 1/toc); %Unccoment this line to see framerate.
 end
 
-%TODO UNCCOMENT: clear; clc;
+%TODO UNCOMMENT: clear; clc;
 
 %Handels window close events. (When the window is closed this function is called).
 function closeCallback(src, ~)
     assignin('base', 'playing', false);
     delete(src);
-end
-
-function gameBoard = drawTetro(tetro, gameBoard)
-    loc = tetro.locations;
-    for i = 1:2:8
-        gameBoard(loc(i),loc(i+1)) = tetro.color;
-    end
-end
-
-function gameBoard = eraseTetro(tetro, gameBoard)   
-    loc = tetro.locations;
-    for i = 1:2:8
-        gameBoard(loc(i),loc(i+1)) = 1;
-    end
 end

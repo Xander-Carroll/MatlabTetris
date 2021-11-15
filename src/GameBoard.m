@@ -1,17 +1,30 @@
 classdef GameBoard
     
     properties
-        Property1
+        board
     end
     
     methods
-        function obj = GameBoard(inputArg1,inputArg2)
-            obj.Property1 = inputArg1 + inputArg2;
+        function obj = GameBoard()
+            obj.board = uint8(ones(20,10));
         end
         
-        function outputArg = method1(obj,inputArg)
-            outputArg = obj.Property1 + inputArg;
+        
+        
+        function obj = update(obj, pre, post)
+            loc = pre.locations;
+            
+            for i = 1:2:8
+                obj.board(loc(i),loc(i+1)) = 1;
+            end
+            
+            loc = post.locations;
+            
+            for i = 1:2:8
+                obj.board(loc(i),loc(i+1)) = post.color;
+            end
+
         end
+        
     end
 end
-
