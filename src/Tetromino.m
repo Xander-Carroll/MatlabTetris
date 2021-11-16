@@ -112,7 +112,7 @@ classdef Tetromino < handle
                         obj.ticsUntilFall = obj.maxTicsUntilFall;
                     end
                     
-                    if obj.bottom + 1 <= 20 && ~collided
+                    if obj.bottom + 1 <= 23 && ~collided
                         for i = 1:2:8
                             obj.locations(i) = obj.locations(i) + 1;
                         end
@@ -158,7 +158,7 @@ function isCollide = checkCollide(obj, gameboard, dir)
         isCollide = false;
         return;
     end
-    if (max(ys) == 20 && isequal(dir, 'd')) 
+    if (max(ys) == 23 && isequal(dir, 'd')) 
         isCollide = true;
         return;
     end

@@ -42,15 +42,10 @@ while playing
     tic;
 
     %Rendering the game scene.
-    drawScene(gameScene, gameBoard.board);
+    drawScene(gameScene, gameBoard.getVisibleBoard());
 
     %Moving the tetromino down.
     [gameBoard, collided] = tetro.move('d', gameBoard);
-
-    if (collided)
-        tetro = Tetromino();
-        collided = false;
-    end
 
     %Handling user input.
     key_down = guidata(gameScene.my_figure);
@@ -80,6 +75,9 @@ while playing
             pieceSpeed = pieceSpeed - 1;
             tetro.maxTicsUntilFall = pieceSpeed;
             fprintf("[DEBUG]: New Piece Speed = %i\n", pieceSpeed);
+        elseif isequal(wasKeyJustPressed, 'f2')
+            tetro = Tetromino();
+            fprintf("[DEBUG]: Piece Created\n");
         end
         
     else
@@ -88,12 +86,20 @@ while playing
         if isequal(wasKeyJustPressed, 's') || isequal(wasKeyJustPressed, 'downarrow')
             tetro.maxTicsUntilFall = pieceSpeed;
             tetro.ticsUntilFall = pieceSpeed;
-        elseif isequal(wasKeyJustPressed, 'f2')
-            tetro = Tetromino();
-            fprintf("[DEBUG]: Piece Created\n");
         end
-    
+
         wasKeyJustPressed = 0;
+
+    end
+    
+    if (collided)
+        tetro = Tetromino();
+        collided = false;
+        
+        if (gameBoard.isGameOver())
+            close(gameScene.my_figure);
+            playing = false;
+        end
     end
 
     %This pause limits the fps based on the framerate variable.
