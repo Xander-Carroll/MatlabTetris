@@ -1,6 +1,4 @@
 classdef GameBoard
-    %GAMEBOARD Summary of this class goes here
-    %   Detailed explanation goes here
     
     properties
         board
@@ -8,8 +6,6 @@ classdef GameBoard
     
     methods
         function obj = GameBoard()
-            %GAMEBOARD Construct an instance of this class
-            %   Detailed explanation goes here
             obj.board = uint8(ones(20,10));
         end
         
@@ -32,4 +28,3 @@ classdef GameBoard
         
     end
 end
-

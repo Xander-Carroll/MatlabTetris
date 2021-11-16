@@ -1,8 +1,6 @@
 classdef Tetromino < handle
-%TETROMINO Summary of this class goes here
-    %   Detailed explanation goes here
-    
     properties
+        %Used to control tetromino appearance/movement.
         type
         color
         locations
@@ -12,17 +10,16 @@ classdef Tetromino < handle
         top
         bottom
 
-        MaxTicsUntilFall = 5;
+        %Used to control tetromino speed.
+        maxTicsUntilFall = 5;
         ticsUntilFall = 5;
     end
 
     methods
         function obj = Tetromino()
-            %TETRAMINO Construct an instance of this class
-            %   Detailed explanation goes here
-            
+
+            %Used to pick a random tetromino piece.
             obj.type = randi(7);
-            %obj.type = 1;
             
             switch obj.type
                 case 1 %Line Piece
@@ -53,7 +50,7 @@ classdef Tetromino < handle
                     obj.bottom = 2;
  
                 case 4 %Right L Piece
-                    obj.color = 4;
+                    obj.color = 3;
                     obj.locations = [[1,6],[2,4],[2,5],[2,6]];
                     
                     obj.left = 4;
@@ -92,6 +89,7 @@ classdef Tetromino < handle
             
         end
         
+        %Function used to move the tetris piece left right or down.
         function [gameboard, collided] = move(obj, dir, gameboard)
             pre = Tetromino().copytetro(obj);
             
@@ -111,7 +109,7 @@ classdef Tetromino < handle
                         obj.ticsUntilFall = obj.ticsUntilFall - 1;
                         return;
                     else
-                        obj.ticsUntilFall = obj.MaxTicsUntilFall;
+                        obj.ticsUntilFall = obj.maxTicsUntilFall;
                     end
                     
                     if obj.bottom + 1 <= 20 && ~collided
@@ -143,7 +141,7 @@ classdef Tetromino < handle
             obj.top = tetro.top;
             obj.bottom = tetro.bottom;
     
-            obj.MaxTicsUntilFall = tetro.MaxTicsUntilFall;
+            obj.maxTicsUntilFall = tetro.maxTicsUntilFall;
             obj.ticsUntilFall = tetro.ticsUntilFall;
         end
 
@@ -151,77 +149,69 @@ classdef Tetromino < handle
 end
 
 function isCollide = checkCollide(obj, gameboard, dir)
-            loc = obj.locations;   
-            board = gameboard.board;
-            
-            xs = loc(2:2:8);
-            ys = loc(1:2:8);
-
-            if (min(xs) == 1 && dir == 'l') || (max(xs) == 10 && dir == 'r')
-                isCollide = false;
-                return;
-            end
-
-            if (max(ys) == 20 && dir == 'd') 
-                isCollide = true;
-                return;
-            end
-
-            switch dir
-                case 'l'
-                    for i = 1:2:8
-
-                        cont = false;
-                        for x = 1:2:8 % excluding itself
-                            if x == i; continue; end
-                            if (loc(i) == loc(x)) && (loc(i + 1) - 1 == loc(x + 1))
-                                cont = true;
-                            end
-                        end
-                        if cont; continue; end
-
-                        if board(loc(i), loc(i+1) - 1) ~= 1
-                            isCollide = true;
-                            return
-                        end
+    loc = obj.locations;   
+    board = gameboard.board;
+        
+    xs = loc(2:2:8);
+    ys = loc(1:2:8);
+    if (min(xs) == 1 && isequal(dir, 'l')) || (max(xs) == 10 && isequal(dir, 'r'))
+        isCollide = false;
+        return;
+    end
+    if (max(ys) == 20 && isequal(dir, 'd')) 
+        isCollide = true;
+        return;
+    end
+    switch dir
+        case 'l'
+            for i = 1:2:8
+                cont = false;
+                for x = 1:2:8 % excluding itself
+                    if x == i; continue; end
+                    if (loc(i) == loc(x)) && (loc(i + 1) - 1 == loc(x + 1))
+                        cont = true;
                     end
+                end
+                if cont; continue; end
+                if board(loc(i), loc(i+1) - 1) ~= 1
+                    isCollide = true;
+                    return
+                end
+            end
+        
+        case 'd'
+            for i = 1:2:8
+                cont = false;
+                for x = 1:2:8 % excluding itself
+                    if x == i; continue; end
+                    if (loc(i) + 1 == loc(x)) && (loc(i + 1) == loc(x + 1))
+                        cont = true;
+                    end
+                end
+                if cont; continue; end
                 
-                case 'd'
-                    for i = 1:2:8
-                        
-                        cont = false;
-                        for x = 1:2:8 % excluding itself
-                            if x == i; continue; end
-                            if (loc(i) + 1 == loc(x)) && (loc(i + 1) == loc(x + 1))
-                                cont = true;
-                            end
-                        end
-                        if cont; continue; end
-                        
-                        if board(loc(i) + 1, loc(i+1)) ~= 1
-                            isCollide = true;
-                            return
-                        end
-                    end
-                
-                case 'r'
-                    for i = 1:2:8
-                        
-                        cont = false;
-                        for x = 1:2:8 % excluding itself
-                            if x == i; continue; end
-                            if (loc(i) == loc(x)) && (loc(i + 1) + 1 == loc(x + 1))
-                                cont = true;
-                            end
-                        end
-                        if cont; continue; end
-                        
-                        if board(loc(i), loc(i+1) + 1) ~= 1
-                            isCollide = true;
-                            return
-                        end
-                    end
+                if board(loc(i) + 1, loc(i+1)) ~= 1
+                    isCollide = true;
+                    return
+                end
             end
-
-            isCollide = false;
+        
+        case 'r'
+            for i = 1:2:8
+                cont = false;
+                for x = 1:2:8 % excluding itself
+                    if x == i; continue; end
+                    if (loc(i) == loc(x)) && (loc(i + 1) + 1 == loc(x + 1))
+                        cont = true;
+                    end
+                end
+                if cont; continue; end
+                
+                if board(loc(i), loc(i+1) + 1) ~= 1
+                    isCollide = true;
+                    return
+                end
+            end
+    end
+    isCollide = false;
 end
