@@ -32,8 +32,7 @@ pieceSpeed = 5;
 %Creating the first piece. Once this piece lands a new piece is made.
 tetro = Tetromino(); tetroLoc = tetro.locations;
 
-%Used to create an if branch that will execute only a single time on a keypress.
-wasKeyJustPressed = 0;
+wasDownJustPressed = false;
 
 %Starting the main game loop. 
 %playing will become false when the game window is closed (Or escape is pressed).
@@ -50,8 +49,6 @@ while playing
     %Handling user input.
     key_down = guidata(gameScene.my_figure);
     if(key_down)
-        wasKeyJustPressed = key_down;
-
         %Left piece movement
         if isequal(key_down, 'a') || isequal(key_down, 'leftarrow')
             [gameBoard, ~] = tetro.move('l', gameBoard);
@@ -59,14 +56,17 @@ while playing
         %Right piece movement
         elseif isequal(key_down, 'd') || isequal(key_down, 'rightarrow')
             [gameBoard, ~] = tetro.move('r', gameBoard);
+        end
         
         %Start piece fast fall
-        elseif isequal(key_down, 's') || isequal(key_down, 'downarrow')
+        if isequal(key_down, 's') || isequal(key_down, 'downarrow')
             tetro.maxTicsUntilFall = 0;
-            tetro.ticsUntilFall = 0;   
+            tetro.ticsUntilFall = 0;
+            wasDownJustPressed = true;
+        end
         
         %Escape key to close game
-        elseif isequal(key_down, 'escape')
+        if isequal(key_down, 'escape')
             close(gameScene.my_figure);
             playing = false;
         
@@ -75,20 +75,13 @@ while playing
             pieceSpeed = pieceSpeed - 1;
             tetro.maxTicsUntilFall = pieceSpeed;
             fprintf("[DEBUG]: New Piece Speed = %i\n", pieceSpeed);
-        elseif isequal(wasKeyJustPressed, 'f2')
-            tetro = Tetromino();
-            fprintf("[DEBUG]: Piece Created\n");
         end
-        
     else
-
-        %When the down key is released stop fast fall.
-        if isequal(wasKeyJustPressed, 's') || isequal(wasKeyJustPressed, 'downarrow')
+        if (wasDownJustPressed)
             tetro.maxTicsUntilFall = pieceSpeed;
             tetro.ticsUntilFall = pieceSpeed;
+            wasDownJustPressed = false;
         end
-
-        wasKeyJustPressed = 0;
     end
 
     %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
@@ -103,6 +96,7 @@ while playing
                 playing = false;
             else
                 tetro = Tetromino();
+                tetro.maxTicsUntilFall = pieceSpeed;
                 collided = false;
 
                 gameBoard = gameBoard.clearCompleteRows();

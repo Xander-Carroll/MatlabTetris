@@ -1,4 +1,5 @@
 classdef Tetromino < handle
+
     properties
         %Used to control tetromino appearance/movement.
         type
