@@ -1,42 +1,50 @@
 classdef GameBoard
     
     properties
+        %The main matrix that holds pieces.
         board
     end
     
     methods
+        %Initalizes the board with 0's
         function obj = GameBoard()
+            %By initializing with ints memory is conserved compared to the doubles that would normally be used.
             obj.board = uint8(ones(23,10));
         end
         
-        function obj = update(obj, pre, post)
-            loc = pre.locations;
-            
+        %This method takes the position of a current piece before and after moving and updates the board matrix appropriatley.
+        function obj = update(obj, pre, post)            
+            %Removes the piece from its old location.
             for i = 1:2:8
-                obj.board(loc(i),loc(i+1)) = 1;
+                obj.board(pre.locations(i), pre.locations(i+1)) = 1;
             end
-            
-            loc = post.locations;
-            
+                        
+            %Redraws the piece at the new location.
             for i = 1:2:8
-                obj.board(loc(i),loc(i+1)) = post.color;
+                obj.board(post.locations(i), post.locations(i+1)) = post.color;
             end
 
         end
 
+        %The tetris board contains three rows at the top that the user can't see. 
+        %This function returns a board that dosent show those three rows.
         function visibileBoard = getVisibleBoard(obj)
             visibileBoard = obj.board(4:23, :);
         end
         
+        %This function should be called when a piece lands to determine if any lines need to be cleared.
         function obj = clearCompleteRows(obj)
             for y = 1:length(obj.board(:,1))
                 lineClear = true;
+
+                %Determines if a line needs cleared.
                 for x = 1:length(obj.board(1,:))
                     if(obj.board(y,x) == 1)
                         lineClear = false;
                     end
                 end
 
+                %If the line does need cleared it is removed and the rows above it are shifted down.
                 if lineClear
                     obj.board((2:y),:) = obj.board((1:y-1), :);
                     obj.board(1,:) = uint8(ones(1,10));
@@ -44,9 +52,11 @@ classdef GameBoard
             end
         end
 
+        %This function should be called when a piece lands to determine if the player has lost.
         function gameOver = isGameOver(obj)
             gameOver = false;
 
+            %Checks to see if any pieces are in the top two rows of the gameboard.
             for x = 1:length(obj.board(1,:))
                 if obj.board(1,x) ~= 1 || obj.board(2,x) ~= 1
                     gameOver = true;
@@ -54,11 +64,12 @@ classdef GameBoard
             end
         end
 
-        function returnBoard = createTwoPlayerBoard(gameBoard1, gameBoard2)
+        %Takes an additional board as a parameter and creates a matrix that shows both boards at once.
+        function returnBoard = createTwoPlayerBoard(obj, gameBoard2)
             returnBoard = uint8(ones(23,25));
 
-            board1 = gameBoard1.board;
-            board2 = gameBoard2.board;
+            board1 = obj.getVisibleBoard();
+            board2 = gameBoard2.getVisibleBoard();
             
             for y = 1:length(board1(:, 1))
                 returnBoard(y,1:10) = board1(y,:);

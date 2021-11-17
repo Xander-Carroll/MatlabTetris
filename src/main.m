@@ -7,39 +7,42 @@ fprintf("Engineering 1181 SDP: Tetris V:0.0.1\n");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %The main game framerate target. (If you set the framerate too high the game won't close).
-framerate = 20; 
+framerate = 15; 
 
 %The main game scene. This will need to be drawn to every frame.
-gameScene = simpleGameEngine('../res/Tiles.png',32,32,1, [255,255,255]);
+gameScene = simpleGameEngine('../res/Tiles.png',32,32,1,[255,255,255]);
 
 %The main game board that will hold a gird of pieces.
-global gameBoard
 gameBoard = GameBoard();
 
-%Used to determine if a piece has landed.
-global collided
+%Used to determine if a piece has landed (and therefore a new piece should be made).
 collided = false;
+collideTimerMax = 5;
+collideTimer = 5;
 
 %Initializing the game scene. The scene must be drawn once before the game loop and before callback methods can be set.
 drawScene(gameScene, gameBoard.getVisibleBoard());
 
-%Setting a callback method for the window close event. (Handeled with functions at the bottom of the script).
+%Setting a callback method for the window close event. (Handeled with function at the bottom of the script).
 set(gameScene.my_figure, 'CloseRequestFcn', @closeCallback);
 
-%Piece Speed
+%The speed at which the pieces fall. A smaller speed make faster pieces.
 pieceSpeed = 5;
 
-%Creating the first piece.
+%Creating the first piece. Once this piece lands a new piece is made.
 tetro = Tetromino(); tetroLoc = tetro.locations;
 
 %Used to create an if branch that will execute only a single time on a keypress.
 wasKeyJustPressed = 0;
 
 %Starting the main game loop. 
-%playing will become false when the game window is closed.
+%playing will become false when the game window is closed (Or escape is pressed).
 playing = true;
 while playing
     tic;
+
+    %Rendering the game scene.
+    drawScene(gameScene, gameBoard.getVisibleBoard());
 
     %Moving the tetromino down.
     [gameBoard, collided] = tetro.move('d', gameBoard);
@@ -86,23 +89,29 @@ while playing
         end
 
         wasKeyJustPressed = 0;
-
     end
 
+    %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
     if (collided)
-        if (gameBoard.isGameOver())
-            close(gameScene.my_figure);
-            playing = false;
+        if(collideTimer > 0)
+            collideTimer = collideTimer - 1;
         else
-            tetro = Tetromino();
-            collided = false;
+            collideTimer = collideTimerMax;
 
-            gameBoard = gameBoard.clearCompleteRows();
+            if (gameBoard.isGameOver())
+                close(gameScene.my_figure);
+                playing = false;
+            else
+                tetro = Tetromino();
+                collided = false;
+
+                gameBoard = gameBoard.clearCompleteRows();
+            end
+
         end
-    end
 
-    %Rendering the game scene.
-    drawScene(gameScene, gameBoard.getVisibleBoard());
+
+    end
 
     %This pause limits the fps based on the framerate variable.
     pause(1/framerate-toc);

@@ -3,10 +3,11 @@ classdef Tetromino < handle
         %Used to control tetromino appearance/movement.
         type
         color
+
+        %Used to keep the location of the piece and keeps it from moving out of the board.
         locations
         left
         right
-
         top
         bottom
 
@@ -16,6 +17,7 @@ classdef Tetromino < handle
     end
 
     methods
+        %Picks a random piece from the list of 7 and initializes the class properities based on the piece picked.
         function obj = Tetromino()
 
             %Used to pick a random tetromino piece.
