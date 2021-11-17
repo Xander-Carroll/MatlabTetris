@@ -23,7 +23,7 @@ classdef Tetromino < handle
             
             switch obj.type
                 case 1 %Line Piece
-                    obj.color = 4;
+                    obj.color = 8;
                     obj.locations = [[1,4],[1,5],[1,6],[1,7]];
                     
                     obj.left = 4;
@@ -50,7 +50,7 @@ classdef Tetromino < handle
                     obj.bottom = 2;
  
                 case 4 %Right L Piece
-                    obj.color = 3;
+                    obj.color = 4;
                     obj.locations = [[1,6],[2,4],[2,5],[2,6]];
                     
                     obj.left = 4;
