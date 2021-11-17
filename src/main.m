@@ -104,8 +104,8 @@ while playing
                 collideTimer = collideTimerMax;
     
                 if (gameBoard.isGameOver())
-                    close(gameScene.my_figure);
-                    playing = false;
+                    inTitleScreen = true;
+                    gameBoard = gameBoard.generateTitleBoard();
                 else
                     tetro = Tetromino();
                     tetro.maxTicsUntilFall = pieceSpeed;
