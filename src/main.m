@@ -3,7 +3,7 @@
 %Developed by Danny, Matt, and Xander. Engineering 1181 SDP.
 
 clear; clc;
-fprintf("Engineering 1181 SDP: Tetris V:0.0.1\n");
+fprintf("Engineering 1181 SDP: Tetris V:0.0.2\n");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %The main game framerate target. (If you set the framerate too high the game won't close).
