@@ -28,6 +28,23 @@ classdef GameBoard
             visibileBoard = obj.board(4:23, :);
         end
         
+        function obj = clearCompleteRows(obj)
+            for y = 1:23
+                lineClear = true;
+                for x = (1:10)
+                    if(obj.board(y,x) == 1)
+                        lineClear = false;
+                    end
+                end
+
+                if lineClear
+                    %TODO FIX THIS!!!!: Fix this line.
+                    obj.board((2:y),:) = obj.board((1:y-1), :);
+                    obj.board(1,:) = uint8(ones(1,10));
+                end
+            end
+        end
+
         function [gameOver] = isGameOver(obj)
             gameOver = false;
 

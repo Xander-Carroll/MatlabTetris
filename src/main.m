@@ -6,6 +6,9 @@ clear; clc;
 fprintf("Engineering 1181 SDP: Tetris V:0.0.1\n");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%The main game framerate target. (If you set the framerate too high the game won't close).
+framerate = 10; 
+
 %The main game scene. This will need to be drawn to every frame.
 gameScene = simpleGameEngine('../res/Tiles.png',32,32,5, [255,255,255]);
 
@@ -13,20 +16,15 @@ gameScene = simpleGameEngine('../res/Tiles.png',32,32,5, [255,255,255]);
 global gameBoard
 gameBoard = GameBoard();
 
+%Used to determine if a piece has landed.
 global collided
 collided = false;
 
 %Initializing the game scene. The scene must be drawn once before the game loop and before callback methods can be set.
-drawScene(gameScene, gameBoard.board);
+drawScene(gameScene, gameBoard.getVisibleBoard());
 
-%Setting callback methods for keypress and window close events. (Handeled with functions at the bottom of the script).
+%Setting a callback method for the window close event. (Handeled with functions at the bottom of the script).
 set(gameScene.my_figure, 'CloseRequestFcn', @closeCallback);
-
-%Starting the main game loop. 
-%playing will become false when the game window is closed.
-
-%The main game framerate target. (If you set the framerate too high the game won't close).
-framerate = 10; 
 
 %Piece Speed
 pieceSpeed = 5;
@@ -37,12 +35,11 @@ tetro = Tetromino(); tetroLoc = tetro.locations;
 %Used to create an if branch that will execute only a single time on a keypress.
 wasKeyJustPressed = 0;
 
+%Starting the main game loop. 
+%playing will become false when the game window is closed.
 playing = true;
 while playing
     tic;
-
-    %Rendering the game scene.
-    drawScene(gameScene, gameBoard.getVisibleBoard());
 
     %Moving the tetromino down.
     [gameBoard, collided] = tetro.move('d', gameBoard);
@@ -54,11 +51,11 @@ while playing
 
         %Left piece movement
         if isequal(key_down, 'a') || isequal(key_down, 'leftarrow')
-            [gameBoard, collided] = tetro.move('l', gameBoard);
+            [gameBoard, ~] = tetro.move('l', gameBoard);
         
         %Right piece movement
         elseif isequal(key_down, 'd') || isequal(key_down, 'rightarrow')
-            [gameBoard, collided] = tetro.move('r', gameBoard);
+            [gameBoard, ~] = tetro.move('r', gameBoard);
         
         %Start piece fast fall
         elseif isequal(key_down, 's') || isequal(key_down, 'downarrow')
@@ -91,16 +88,21 @@ while playing
         wasKeyJustPressed = 0;
 
     end
-    
+
     if (collided)
-        tetro = Tetromino();
-        collided = false;
-        
         if (gameBoard.isGameOver())
             close(gameScene.my_figure);
             playing = false;
+        else
+            tetro = Tetromino();
+            collided = false;
+
+            gameBoard = gameBoard.clearCompleteRows();
         end
     end
+
+    %Rendering the game scene.
+    drawScene(gameScene, gameBoard.getVisibleBoard());
 
     %This pause limits the fps based on the framerate variable.
     pause(1/framerate-toc);
