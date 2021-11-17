@@ -7,50 +7,51 @@ classdef GameBoard
     
     methods
         %Initalizes the board with 0's
-        function obj = GameBoard(temp)
-              obj.board = uint8(ones(23,10));
-              %By initializing with ints memory is conserved compared to the doubles that would normally be used.
-
-              if (nargin > 0) %if (on title screen) then put "single player" and "multi player on the screen
-                  obj.board(4,:) = 9;
-                  obj.board(23,:) = 9;
-                  obj.board(:,1) = 9;
-                  obj.board(:,10) = 9;
-
-                  obj.board(13,:) = 9;
-                  obj.board(14,:) = 9;
-                  
-                  obj.board(8,3) = 11;
-                  obj.board(8,4) = 12;
-                  obj.board(8,5) = 13;
-                  obj.board(8,6) = 14;
-                  obj.board(8,7) = 15;
-                  obj.board(8,8) = 16;
-    
-                  obj.board(9,3) = 17;
-                  obj.board(9,4) = 15;
-                  obj.board(9,5) = 18;
-                  obj.board(9,6) = 19;
-                  obj.board(9,7) = 16;
-                  obj.board(9,8) = 20;  
-   
-                  obj.board(18,3) = 21;
-                  obj.board(18,4) = 22;
-                  obj.board(18,5) = 15;
-                  obj.board(18,6) = 23;
-                  obj.board(18,7) = 12;
-                  obj.board(18,8) = 24;
-    
-                  obj.board(19,3) = 17;
-                  obj.board(19,4) = 15;
-                  obj.board(19,5) = 18;
-                  obj.board(19,6) = 19;
-                  obj.board(19,7) = 16;
-                  obj.board(19,8) = 20;
-              end
-
-          end
+        function obj = GameBoard()
+            %By initializing with ints memory is conserved compared to the doubles that would normally be used.
+            obj.board = uint8(ones(23,10));
+            
+        end
         
+        function obj = generateTitleBoard(obj)
+            obj.board(4,:) = 9;
+            obj.board(23,:) = 9;
+            obj.board(:,1) = 9;
+            obj.board(:,10) = 9; 
+            obj.board(13,:) = 9;
+            obj.board(14,:) = 9;
+            
+            obj.board(8,3) = 11;
+            obj.board(8,4) = 12;
+            obj.board(8,5) = 13;
+            obj.board(8,6) = 14;
+            obj.board(8,7) = 15;
+            obj.board(8,8) = 16;
+  
+            obj.board(9,3) = 17;
+            obj.board(9,4) = 15;
+            obj.board(9,5) = 18;
+            obj.board(9,6) = 19;
+            obj.board(9,7) = 16;
+            obj.board(9,8) = 20;  
+ 
+            obj.board(18,3) = 21;
+            obj.board(18,4) = 22;
+            obj.board(18,5) = 15;
+            obj.board(18,6) = 23;
+            obj.board(18,7) = 12;
+            obj.board(18,8) = 24;
+  
+            obj.board(19,3) = 17;
+            obj.board(19,4) = 15;
+            obj.board(19,5) = 18;
+            obj.board(19,6) = 19;
+            obj.board(19,7) = 16;
+            obj.board(19,8) = 20;
+            
+            obj.board = obj.board;
+        end
+
         %This method takes the position of a current piece before and after moving and updates the board matrix appropriatley.
         function obj = update(obj, pre, post)            
             %Removes the piece from its old location.

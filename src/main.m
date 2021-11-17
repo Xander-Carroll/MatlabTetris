@@ -12,12 +12,9 @@ framerate = 15;
 %The main game scene. This will need to be drawn to every frame.
 gameScene = simpleGameEngine('../res/Tiles.png',32,32,1,[255,255,255]);
 
-%The board that is only used for the title
-global titleBoard
-titleBoard = GameBoard(1);
-
 %The main game board that will hold a gird of pieces.
 gameBoard = GameBoard();
+gameBoard = gameBoard.generateTitleBoard();
 
 %Used to determine if a piece has landed (and therefore a new piece should be made).
 collided = false;
@@ -25,7 +22,7 @@ collideTimerMax = 5;
 collideTimer = 5;
 
 %Initializing the game scene. The scene must be drawn once before the game loop and before callback methods can be set.
-drawScene(gameScene, titleBoard.getVisibleBoard());
+drawScene(gameScene, gameBoard.getVisibleBoard());
 
 %Setting a callback method for the window close event. (Handeled with function at the bottom of the script).
 set(gameScene.my_figure, 'CloseRequestFcn', @closeCallback);
@@ -44,17 +41,19 @@ playing = true;
 inTitleScreen = true;
 while playing
     tic;
+
+    %Rendering the game scene.
+    drawScene(gameScene, gameBoard.getVisibleBoard());
+
     if (inTitleScreen) 
         [y,x] = getMouseInput(gameScene);
         if (y <= 10) %singleplayer
             inTitleScreen = false;
+            gameBoard.board = uint8(ones(23,10));
         else %multiplayer
             inTitleScreen = false;
         end
     else
-
-        %Rendering the game scene.
-        drawScene(gameScene, gameBoard.getVisibleBoard());
     
         %Moving the tetromino down.
         [gameBoard, collided] = tetro.move('d', gameBoard);
@@ -117,9 +116,9 @@ while playing
     
             end
     
-    
         end
     end
+
     %This pause limits the fps based on the framerate variable.
     pause(1/framerate-toc);
     %fprintf("Framerate: %f\n", 1/toc); %TODO REMOVE: Unccoment this line to see framerate.
