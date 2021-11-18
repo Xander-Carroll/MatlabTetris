@@ -50,8 +50,10 @@ while playing
         if (y <= 10) %singleplayer
             inTitleScreen = false;
             gameBoard.board = uint8(ones(23,10));
+            audioPlayer = startMusicTrack("../res/original.mp3");
         else %multiplayer
             inTitleScreen = false;
+            audioPlayer = startMusicTrack("../res/original.mp3");
         end
     else
     
@@ -87,6 +89,9 @@ while playing
                 pieceSpeed = pieceSpeed - 1;
                 tetro.maxTicsUntilFall = pieceSpeed;
                 fprintf("[DEBUG]: New Piece Speed = %i\n", pieceSpeed);
+            elseif isequal(key_down, 'f2')
+                audioPlayer = startMusicTrack("../res/remix.mp3");
+                fprintf("[DEBUG]: New Sound\n");
             end
         else
             if (wasDownJustPressed)
@@ -124,7 +129,24 @@ while playing
     %fprintf("Framerate: %f\n", 1/toc); %TODO REMOVE: Unccoment this line to see framerate.
 end
 
+%Stops the audio from playing after the program finishes.
+stop(audioPlayer);
+delete(audioPlayer);
+
 %TODO UNCOMMENT: clear; clc;
+
+%Takes a filePath to the track to start and plays the file.
+function outAudioPlayer = startMusicTrack(filePath)
+    [audioFile, fs] = audioread(filePath);
+    outAudioPlayer = audioplayer(audioFile, fs);
+    set(outAudioPlayer, 'StopFcn', @musicStopped);
+    play(outAudioPlayer);
+end
+
+%Starts the music again once it stopped.
+function musicStopped(src, ~)
+    play(src);
+end
 
 %Handels window close events. (When the window close button is pressed this function is called).
 function closeCallback(src, ~)
