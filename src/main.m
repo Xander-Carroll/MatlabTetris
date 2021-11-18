@@ -93,6 +93,22 @@ while playing
             if(keyHandeler.getKeyState(keyHandeler.Keys.d) || keyHandeler.getKeyState(keyHandeler.Keys.rightArrow))
                 gameBoard = tetro.move('r', gameBoard);
             end
+        else
+            if(keyHandeler.getKeyState(keyHandeler.Keys.a))
+                gameBoard = tetro.move('l', gameBoard);
+            end
+
+            if(keyHandeler.getKeyState(keyHandeler.Keys.d))
+                gameBoard = tetro.move('r', gameBoard);
+            end
+
+            if(keyHandeler.getKeyState(keyHandeler.Keys.leftArrow))
+                gameBoardPlayer2 = tetroPlayer2.move('l', gameBoardPlayer2);
+            end
+
+            if(keyHandeler.getKeyState(keyHandeler.Keys.rightArrow))
+                gameBoardPlayer2 = tetroPlayer2.move('r', gameBoardPlayer2);
+            end
         end
 
         %Checking for a game over.
