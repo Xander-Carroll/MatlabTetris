@@ -138,6 +138,10 @@ classdef GameBoard
             end
         end
 
+        function returnBoard = createSinglePlayerBoard(obj)
+            
+        end
+
         %Takes an additional board as a parameter and creates a matrix that shows both boards at once.
         function returnBoard = createTwoPlayerBoard(obj, gameBoard2)
             returnBoard = uint8(ones(20,25));
