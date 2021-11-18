@@ -3,7 +3,7 @@
 %Developed by Danny, Matt, and Xander. Engineering 1181 SDP.
 
 clear; clc;
-fprintf("Engineering 1181 SDP: Tetris V:0.0.1\n");
+fprintf("Engineering 1181 SDP: Tetris V:1.0.0\n");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %The main game framerate target. (If you set the framerate too high the game won't close).
@@ -115,6 +115,11 @@ while playing
                 tetro.maxTicsUntilFall = pieceSpeed;
                 tetro.ticsUntilFall = pieceSpeed;
             end
+
+            %If the rotate key is pressed.
+            if(keyHandler.getKeyState(keyHandler.Keys.w) || keyHandler.getKeyState(keyHandler.Keys.upArrow))
+                gameBoard = tetro.rotate(gameBoard);
+            end
         else
             %If the left key is pressed for player 1.
             if(keyHandler.getKeyState(keyHandler.Keys.a))
@@ -140,6 +145,11 @@ while playing
                 tetro.ticsUntilFall = pieceSpeed;
             end
 
+            %If the rotate key is pressed for player 1.
+            if(keyHandler.getKeyState(keyHandler.Keys.w))
+                gameBoard = tetro.rotate(gameBoard);
+            end
+
             %If the left key is pressed for player 2.
             if(keyHandler.getKeyState(keyHandler.Keys.leftArrow))
                 gameBoardPlayer2 = tetroPlayer2.move('l', gameBoardPlayer2);
@@ -162,6 +172,11 @@ while playing
                 wasDownJustPressedPlayer2 = false;
                 tetroPlayer2.maxTicsUntilFall = pieceSpeedPlayer2;
                 tetroPlayer2.ticsUntilFall = pieceSpeedPlayer2;
+            end
+
+            %If the rotate key is pressed for player 2.
+            if (keyHandler.getKeyState(keyHandler.Keys.upArrow))
+                gameBoardPlayer2 = tetroPlayer2.rotate(gameBoardPlayer2);
             end
         end
 
