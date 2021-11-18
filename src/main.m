@@ -34,6 +34,10 @@ set(gameScene.my_figure, 'KeyReleaseFcn', @keyHandler.onKeyRelease);
 pieceSpeed = 5;
 pieceSpeedPlayer2 = 5;
 
+%Used for fastfall.
+wasDownJustPressed = false;
+wasDownJustPressedPlayer2 = false;
+
 %Creating the first piece. Once this piece lands a new piece is made.
 tetro = Tetromino();
 tetroPlayer2 = Tetromino();
@@ -86,28 +90,76 @@ while playing
         
         %Handle Key Input
         if(~isMultiplayer)
+            %If the left key is pressed.
             if(keyHandler.getKeyState(keyHandler.Keys.a) || keyHandler.getKeyState(keyHandler.Keys.leftArrow))
                 gameBoard = tetro.move('l', gameBoard);
             end
 
+            %If the right key is pressed.
             if(keyHandler.getKeyState(keyHandler.Keys.d) || keyHandler.getKeyState(keyHandler.Keys.rightArrow))
                 gameBoard = tetro.move('r', gameBoard);
             end
+
+            %If the down key is pressed.
+            if(keyHandler.getKeyState(keyHandler.Keys.s) || keyHandler.getKeyState(keyHandler.Keys.downArrow))
+                wasDownJustPressed = true;
+                tetro.maxTicsUntilFall = 0;
+                tetro.ticsUntilFall = 0;
+            end
+
+            %If the down key is released.
+            if (wasDownJustPressed && ~keyHandler.getKeyState(keyHandler.Keys.s) && ~keyHandler.getKeyState(keyHandler.Keys.downArrow))
+                wasDownJustPressed = false;
+                tetro.maxTicsUntilFall = pieceSpeed;
+                tetro.ticsUntilFall = pieceSpeed;
+            end
         else
+            %If the left key is pressed for player 1.
             if(keyHandler.getKeyState(keyHandler.Keys.a))
                 gameBoard = tetro.move('l', gameBoard);
             end
 
+            %If the right key is pressed for player 1.
             if(keyHandler.getKeyState(keyHandler.Keys.d))
                 gameBoard = tetro.move('r', gameBoard);
             end
 
+            %If the down key is pressed for player 1.
+            if(keyHandler.getKeyState(keyHandler.Keys.s))
+                wasDownJustPressed = true;
+                tetro.maxTicsUntilFall = 0;
+                tetro.ticsUntilFall = 0;
+            end
+
+            %If the down key is released for player 1.
+            if (wasDownJustPressed && ~keyHandler.getKeyState(keyHandler.Keys.s))
+                wasDownJustPressed = false;
+                tetro.maxTicsUntilFall = pieceSpeed;
+                tetro.ticsUntilFall = pieceSpeed;
+            end
+
+            %If the left key is pressed for player 2.
             if(keyHandler.getKeyState(keyHandler.Keys.leftArrow))
                 gameBoardPlayer2 = tetroPlayer2.move('l', gameBoardPlayer2);
             end
 
+            %If the right key is pressed for player 2.
             if(keyHandler.getKeyState(keyHandler.Keys.rightArrow))
                 gameBoardPlayer2 = tetroPlayer2.move('r', gameBoardPlayer2);
+            end
+
+            %If the down key is pressed for player 2.
+            if(keyHandler.getKeyState(keyHandler.Keys.downArrow))
+                wasDownJustPressedPlayer2 = true;
+                tetroPlayer2.maxTicsUntilFall = 0;
+                tetroPlayer2.ticsUntilFall = 0;
+            end
+
+            %If the down key is released for player 2.
+            if (wasDownJustPressedPlayer2 && ~keyHandler.getKeyState(keyHandler.Keys.downArrow))
+                wasDownJustPressedPlayer2 = false;
+                tetroPlayer2.maxTicsUntilFall = pieceSpeedPlayer2;
+                tetroPlayer2.ticsUntilFall = pieceSpeedPlayer2;
             end
         end
 

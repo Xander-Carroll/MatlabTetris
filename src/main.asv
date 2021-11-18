@@ -25,14 +25,18 @@ drawScene(gameScene, gameBoard.getVisibleBoard());
 %Setting a callback method for the window close event. (Handeled with function at the bottom of the script).
 set(gameScene.my_figure, 'CloseRequestFcn', @closeCallback);
 
-%Setting a callback method for key press/release events. These are given to the keyHandeler object that will be used to get key input.
-keyHandeler = KeyHandeler();
-set(gameScene.my_figure, 'KeyPressFcn', @keyHandeler.onKeyPress);
-set(gameScene.my_figure, 'KeyReleaseFcn', @keyHandeler.onKeyRelease);
+%Setting a callback method for key press/release events. These are given to the keyHandler object that will be used to get key input.
+keyHandler = KeyHandler();
+set(gameScene.my_figure, 'KeyPressFcn', @keyHandler.onKeyPress);
+set(gameScene.my_figure, 'KeyReleaseFcn', @keyHandler.onKeyRelease);
 
 %The speed at which the pieces fall. A smaller speed make faster pieces.
-pieceSpeed = 1;
+pieceSpeed = 5;
 pieceSpeedPlayer2 = 5;
+
+%Used for fastfall.
+wasDownJustPressed = false;
+wasDownJustPressedPlayer2 = false;
 
 %Creating the first piece. Once this piece lands a new piece is made.
 tetro = Tetromino();
@@ -82,14 +86,53 @@ while playing
             [gameBoardPlayer2, tetroPlayer2, player2GameOver] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2);
         end
 
-        %keyHandeler.getKeyState(keyHandeler.Keys.downArrow)
-        disp("")
+        %fprintf("[W]: %i , [UP]: %i\n", keyHandler.getKeyState(keyHandler.Keys.w), keyHandler.getKeyState(keyHandler.Keys.upArrow));
+        
+        %Handle Key Input
+        if(~isMultiplayer)
+            if(keyHandler.getKeyState(keyHandler.Keys.a) || keyHandler.getKeyState(keyHandler.Keys.leftArrow))
+                gameBoard = tetro.move('l', gameBoard);
+            end
+
+            if(keyHandler.getKeyState(keyHandler.Keys.d) || keyHandler.getKeyState(keyHandler.Keys.rightArrow))
+                gameBoard = tetro.move('r', gameBoard);
+            end
+
+            if(keyHandler.getKeyState(keyHandler.Keys.s) || keyHandler.getKeyState(keyHandler.Keys.downArrow))
+                wasDownJustPressed = true;
+            end
+
+            
+
+        else
+            if(keyHandler.getKeyState(keyHandler.Keys.a))
+                gameBoard = tetro.move('l', gameBoard);
+            end
+
+            if(keyHandler.getKeyState(keyHandler.Keys.d))
+                gameBoard = tetro.move('r', gameBoard);
+            end
+
+            if(keyHandler.getKeyState(keyHandler.Keys.leftArrow))
+                gameBoardPlayer2 = tetroPlayer2.move('l', gameBoardPlayer2);
+            end
+
+            if(keyHandler.getKeyState(keyHandler.Keys.rightArrow))
+                gameBoardPlayer2 = tetroPlayer2.move('r', gameBoardPlayer2);
+            end
+        end
 
         %Checking for a game over.
         if(player1GameOver || player2GameOver)
             inTitleScreen = true;
         end
 
+    end
+
+    %If the escape key is pressed the game closes.
+    if(keyHandler.getKeyState(keyHandler.Keys.escape))
+        close(gameScene.my_figure);
+        playing = false;
     end
 
     %This pause limits the fps based on the framerate variable.
