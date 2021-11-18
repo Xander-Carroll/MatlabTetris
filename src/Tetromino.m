@@ -151,7 +151,8 @@ classdef Tetromino < handle
             gameboard = gameboard.update(pre, obj);
         end
         
-        function obj = copytetro(obj, tetro)
+        %Function copies all properties of one tetro to another
+        function obj = copytetro(obj, tetro) 
             obj.type = tetro.type;
             obj.color = tetro.color;
             obj.locations = tetro.locations;
@@ -165,11 +166,13 @@ classdef Tetromino < handle
             obj.maxTicsUntilFall = tetro.maxTicsUntilFall;
             obj.ticsUntilFall = tetro.ticsUntilFall;
         end
-
+        
+        %Function used to rotate the tetris piece
         function gameboard = rotate(obj, gameboard)
             if obj.type == 2; return; end % lol?
             
-            dir = 1;
+            % dir = 1; //only to be used if we decide to rotate in both
+            %            directions, commented out for now.
                 
             pre = Tetromino().copytetro(obj);
             loc = obj.locations;
@@ -210,11 +213,8 @@ classdef Tetromino < handle
                        temp(x) = temp(x) + kicklist(i);
                        temp(x + 1) = temp(x + 1) + kicklist(i + 1);
                     end
-                    
-                    disp(temp);
-                    temp = rotadjust(temp);
-                    disp(temp);
-                    
+       
+                    temp = rotadjust(temp);                
                     collide = checkRotCollide(obj, temp, board);
                     
                     if ~collide
@@ -253,7 +253,7 @@ classdef Tetromino < handle
     end
 end
 
-function adj = rotadjust(loc)
+function adj = rotadjust(loc) % adjusts piece to stay in bounds
     xs = loc(2:2:8);
     ys = loc(1:2:8);
 
@@ -285,9 +285,7 @@ function collided = checkRotCollide(obj, loc, board)
     for i = 1:2:8
         cont = false;
         for x = 1:2:8 % self exclusion
-            if (loc(i) == loc(x) && loc(i + 1) == loc(x + 1))
-                cont = true; break;
-            elseif (loc(i) == obj.locations(x) && loc(i + 1) == obj.locations(x + 1))
+            if (loc(i) == obj.locations(x) && loc(i + 1) == obj.locations(x + 1))
                 cont = true; break;
             end
         end

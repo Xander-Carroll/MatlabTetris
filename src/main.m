@@ -69,8 +69,9 @@ while playing
             elseif isequal(key_down, 'd') || isequal(key_down, 'rightarrow')
                 [gameBoard, ~] = tetro.move('r', gameBoard);
             
-            elseif isequal(key_down, 'w')
+            elseif isequal(key_down, 'w') || isequal(key_down, 'uparrow')
                 gameBoard = tetro.rotate(gameBoard);
+                collideTimer = collideTimerMax;
 
             %Start piece fast fall
             elseif isequal(key_down, 's') || isequal(key_down, 'downarrow')
