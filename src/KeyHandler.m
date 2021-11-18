@@ -1,4 +1,4 @@
-classdef KeyHandeler < handle
+classdef KeyHandler < handle
     properties (Constant)
         Keys = struct(  'upArrow', 1, 'downArrow', 2, 'leftArrow', 3, 'rightArrow', 4, ...
                         'w', 5, 'a', 6, 's', 7, 'd', 8, 'escape', 9, 'f1', 10);

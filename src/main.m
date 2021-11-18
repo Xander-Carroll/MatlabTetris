@@ -25,10 +25,10 @@ drawScene(gameScene, gameBoard.getVisibleBoard());
 %Setting a callback method for the window close event. (Handeled with function at the bottom of the script).
 set(gameScene.my_figure, 'CloseRequestFcn', @closeCallback);
 
-%Setting a callback method for key press/release events. These are given to the keyHandeler object that will be used to get key input.
-keyHandeler = KeyHandeler();
-set(gameScene.my_figure, 'KeyPressFcn', @keyHandeler.onKeyPress);
-set(gameScene.my_figure, 'KeyReleaseFcn', @keyHandeler.onKeyRelease);
+%Setting a callback method for key press/release events. These are given to the keyHandler object that will be used to get key input.
+keyHandler = KeyHandler();
+set(gameScene.my_figure, 'KeyPressFcn', @keyHandler.onKeyPress);
+set(gameScene.my_figure, 'KeyReleaseFcn', @keyHandler.onKeyRelease);
 
 %The speed at which the pieces fall. A smaller speed make faster pieces.
 pieceSpeed = 5;
@@ -82,31 +82,31 @@ while playing
             [gameBoardPlayer2, tetroPlayer2, player2GameOver] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2);
         end
 
-        %fprintf("[W]: %i , [UP]: %i\n", keyHandeler.getKeyState(keyHandeler.Keys.w), keyHandeler.getKeyState(keyHandeler.Keys.upArrow));
+        %fprintf("[W]: %i , [UP]: %i\n", keyHandler.getKeyState(keyHandler.Keys.w), keyHandler.getKeyState(keyHandler.Keys.upArrow));
         
         %Handle Key Input
         if(~isMultiplayer)
-            if(keyHandeler.getKeyState(keyHandeler.Keys.a) || keyHandeler.getKeyState(keyHandeler.Keys.leftArrow))
+            if(keyHandler.getKeyState(keyHandler.Keys.a) || keyHandler.getKeyState(keyHandler.Keys.leftArrow))
                 gameBoard = tetro.move('l', gameBoard);
             end
 
-            if(keyHandeler.getKeyState(keyHandeler.Keys.d) || keyHandeler.getKeyState(keyHandeler.Keys.rightArrow))
+            if(keyHandler.getKeyState(keyHandler.Keys.d) || keyHandler.getKeyState(keyHandler.Keys.rightArrow))
                 gameBoard = tetro.move('r', gameBoard);
             end
         else
-            if(keyHandeler.getKeyState(keyHandeler.Keys.a))
+            if(keyHandler.getKeyState(keyHandler.Keys.a))
                 gameBoard = tetro.move('l', gameBoard);
             end
 
-            if(keyHandeler.getKeyState(keyHandeler.Keys.d))
+            if(keyHandler.getKeyState(keyHandler.Keys.d))
                 gameBoard = tetro.move('r', gameBoard);
             end
 
-            if(keyHandeler.getKeyState(keyHandeler.Keys.leftArrow))
+            if(keyHandler.getKeyState(keyHandler.Keys.leftArrow))
                 gameBoardPlayer2 = tetroPlayer2.move('l', gameBoardPlayer2);
             end
 
-            if(keyHandeler.getKeyState(keyHandeler.Keys.rightArrow))
+            if(keyHandler.getKeyState(keyHandler.Keys.rightArrow))
                 gameBoardPlayer2 = tetroPlayer2.move('r', gameBoardPlayer2);
             end
         end
@@ -119,7 +119,7 @@ while playing
     end
 
     %If the escape key is pressed the game closes.
-    if(keyHandeler.getKeyState(keyHandeler.Keys.escape))
+    if(keyHandler.getKeyState(keyHandler.Keys.escape))
         close(gameScene.my_figure);
         playing = false;
     end
