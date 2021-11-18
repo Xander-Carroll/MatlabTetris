@@ -82,19 +82,14 @@ while playing
             [gameBoardPlayer2, tetroPlayer2, player2GameOver] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2);
         end
 
-        %fprintf("[W]: %i , [UP]: %i\n", keyHandeler.getKeyState(keyHandeler.Keys.w), keyHandeler.getKeyState(keyHandeler.Keys.upArrow));
+        %keyHandeler.getKeyState(keyHandeler.Keys.downArrow)
+        disp("")
 
         %Checking for a game over.
         if(player1GameOver || player2GameOver)
             inTitleScreen = true;
         end
 
-    end
-
-    %If the escape key is pressed the game closes.
-    if(keyHandeler.getKeyState(keyHandeler.Keys.escape))
-        close(gameScene.my_figure);
-        playing = false;
     end
 
     %This pause limits the fps based on the framerate variable.

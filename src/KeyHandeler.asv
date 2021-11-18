@@ -1,7 +1,7 @@
 classdef KeyHandeler < handle
     properties (Constant)
         Keys = struct(  'upArrow', 1, 'downArrow', 2, 'leftArrow', 3, 'rightArrow', 4, ...
-                        'w', 5, 'a', 6, 's', 7, 'd', 8, 'escape', 9, 'f1', 10);
+                        'w', 5, 'a', 6, 's', 7, 'd', 8);
     end
 
     properties
@@ -33,12 +33,6 @@ classdef KeyHandeler < handle
                 obj.currentKeys(obj.Keys.d) = true;
             end
 
-            if(isequal(event.Key, 'escape'))
-                obj.currentKeys(obj.Keys.escape) = true;
-            elseif(isequal(event.Key, 'f1'))
-                obj.currentKeys(obj.Keys.f1) = true;
-            end
-
         end
 
         %This function is called any time a key is released.
@@ -61,12 +55,6 @@ classdef KeyHandeler < handle
                 obj.currentKeys(obj.Keys.s) = false;
             elseif(isequal(event.Key, 'd'))
                 obj.currentKeys(obj.Keys.d) = false;
-            end
-
-            if(isequal(event.Key, 'escape'))
-                obj.currentKeys(obj.Keys.escape) = false;
-            elseif(isequal(event.Key, 'f1'))
-                obj.currentKeys(obj.Keys.f1) = false;
             end
         end
 
