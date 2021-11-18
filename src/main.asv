@@ -10,7 +10,7 @@ fprintf("Engineering 1181 SDP: Tetris V:0.0.2\n");
 framerate = 15; 
 
 %The main game scene. This will need to be drawn to every frame.
-
+titleScene = simpleGameEngine('../res/Tiles.png',32,32,1,[0,0,0]);
 gameScene = simpleGameEngine('../res/Tiles.png',32,32,1,[255,255,255]);
 
 %The main game board that will hold a gird of pieces.
@@ -47,13 +47,12 @@ while playing
     drawScene(gameScene, gameBoard.getVisibleBoard());
 
     if (inTitleScreen) 
-        k = getKeyboardInput(gameScene);
-        if (isequal(k,'1')) %singleplayer
+        [y,x] = getMouseInput(gameScene);
+        if (y <= 10) %singleplayer
             inTitleScreen = false;
             gameBoard.board = uint8(ones(23,18));
         else %multiplayer
             inTitleScreen = false;
-            gameBoard.board = uint8(ones(23,18));
         end
     else
     

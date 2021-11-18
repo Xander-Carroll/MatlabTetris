@@ -14,20 +14,13 @@ classdef GameBoard
         end
         
         function obj = generateTitleBoard(obj)
-            for x = 2:17
-                obj.board(4, x) = 57;
-                obj.board(23, x) = 51;
-            end
-            for y = 5:22
-                obj.board(y, 1) = 50;
-                obj.board(y, 18) = 56;
-            end
 
-            obj.board(4, 1) = 52;
-            obj.board(23, 1) = 54;
+            obj.board(4, :) = randi(2) + 6;
+            obj.board(23, :) = randi(2) + 6;
 
-            obj.board(4, 18) = 53;
-            obj.board(23, 18) = 55;
+            obj.board(:, 1) = randi(2) + 6;
+            obj.board(:, 18) = randi(2) + 6;
+
 
             
             obj.board(8,7) = 23;%M
@@ -64,15 +57,20 @@ classdef GameBoard
             
 
 
-            obj.board(16,7) = 26;%P
-            obj.board(16,8) = 28;%R
-            obj.board(16,9) = 15;%E
-            obj.board(16,10) = 29;%S
-            obj.board(16,11) = 29;%S
-            obj.board(16,12) = 37;%1
-
-         
-            
+            obj.board(15,3) = 29;%P
+            obj.board(15,4) = 19;%I
+            obj.board(15,5) = 24;%N
+            obj.board(15,6) = 17;%G
+            obj.board(15,7) = 22;%L
+            obj.board(15,8) = 15;%E
+            obj.board(15,9) = 10;%
+            obj.board(15,10) = 10;%
+            obj.board(15,11) = 26;%P
+            obj.board(15,12) = 22;%L
+            obj.board(15,13) = 11;%A
+            obj.board(15,14) = 35;%Y
+            obj.board(15,15) = 15;%E
+            obj.board(15,16) = 28;%R
 
             obj.board(15,3) = 29;%S
             obj.board(15,4) = 19;%I
@@ -102,21 +100,15 @@ classdef GameBoard
             obj.board(19,13) = 35;%Y
             obj.board(19,14) = 15;%E
             obj.board(19,15) = 28;%R
+
             
-            obj.board(20,7) = 26;%P
-            obj.board(20,8) = 28;%R
-            obj.board(20,9) = 15;%E
-            obj.board(20,10) = 29;%S
-            obj.board(20,11) = 29;%S
-            obj.board(20,12) = 46;%0
-            
-            for y = 1:23
-                for x = 1:18
-                    if obj.board(y,x) == 1
-                        obj.board(y,x) = 49;
-                    end
-                end
-            end
+            %for y = 1:23
+             %   for x = 1:18
+              %      if obj.board(y,x) == 1
+               %         obj.board(y,x) = 9;
+                %    end
+                %end
+            %end
             
             obj.board = obj.board;
         end
