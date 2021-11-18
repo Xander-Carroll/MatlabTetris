@@ -6,7 +6,7 @@ classdef KeyHandeler < handle
 
     properties
         %A list of all used keys and their current state.
-        currentKeys = false(14);
+        currentKeys = false(10);
     end
     
     methods

@@ -68,17 +68,18 @@ classdef GameBoard
                     obj.collideTimer = obj.collideTimer - 1;
                 else
                     obj.collideTimer = obj.collideTimerMax;
-                end
+
+                    if (obj.isGameOver())
+                        gameOver = true;
+                        obj = obj.generateTitleBoard();
+                    else
+                        tetro = Tetromino();
+                        tetro.maxTicsUntilFall = speed;
+                        obj.collided = false;
     
-                if (obj.isGameOver())
-                    gameOver = true;
-                    obj = obj.generateTitleBoard();
-                else
-                    tetro = Tetromino();
-                    tetro.maxTicsUntilFall = speed;
-                    obj.collided = false;
-    
-                    obj = obj.clearCompleteRows();
+                        obj = obj.clearCompleteRows();
+                    end
+
                 end
     
             end

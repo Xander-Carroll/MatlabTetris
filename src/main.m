@@ -31,7 +31,7 @@ set(gameScene.my_figure, 'KeyPressFcn', @keyHandeler.onKeyPress);
 set(gameScene.my_figure, 'KeyReleaseFcn', @keyHandeler.onKeyRelease);
 
 %The speed at which the pieces fall. A smaller speed make faster pieces.
-pieceSpeed = 1;
+pieceSpeed = 5;
 pieceSpeedPlayer2 = 5;
 
 %Creating the first piece. Once this piece lands a new piece is made.
@@ -83,6 +83,17 @@ while playing
         end
 
         %fprintf("[W]: %i , [UP]: %i\n", keyHandeler.getKeyState(keyHandeler.Keys.w), keyHandeler.getKeyState(keyHandeler.Keys.upArrow));
+        
+        %Handle Key Input
+        if(~isMultiplayer)
+            if(keyHandeler.getKeyState(keyHandeler.Keys.a) || keyHandeler.getKeyState(keyHandeler.Keys.leftArrow))
+                gameBoard = tetro.move('l', gameBoard);
+            end
+
+            if(keyHandeler.getKeyState(keyHandeler.Keys.d) || keyHandeler.getKeyState(keyHandeler.Keys.rightArrow))
+                gameBoard = tetro.move('r', gameBoard);
+            end
+        end
 
         %Checking for a game over.
         if(player1GameOver || player2GameOver)
