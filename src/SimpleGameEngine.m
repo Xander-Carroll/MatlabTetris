@@ -218,7 +218,7 @@ classdef SimpleGameEngine < handle
             %  2. The column of the tile clicked by the user
             %  3. (Optional) the button of the mouse used to click (1,2, or 3 for left, middle, and right, respectively)
             % 
-            % Notes: A set of “crosshairs” appear in the scene’s figure,
+            % Notes: A set of Â“crosshairsÂ” appear in the sceneÂ’s figure,
             % and the program will pause until the user clicks on the
             % figure. It is possible to click outside the area of the
             % scene, in which case, the closest row and/or column is
