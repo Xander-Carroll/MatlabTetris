@@ -38,6 +38,9 @@ pieceSpeedPlayer2 = 5;
 wasDownJustPressed = false;
 wasDownJustPressedPlayer2 = false;
 
+%Starts music
+audioPlayer = startMusicTrack("../res/original.mp3");
+
 %Creating the first piece. Once this piece lands a new piece is made.
 tetro = Tetromino();
 tetroPlayer2 = Tetromino();
@@ -68,7 +71,6 @@ while playing
             isMultiplayer = true;
         end
 
-        audioPlayer = startMusicTrack("../res/original.mp3");
         gameBoard.board = uint8(ones(23,10));
         gameBoardPlayer2.board = uint8(ones(23,10));
         inTitleScreen = false;
