@@ -16,10 +16,10 @@
 % is how to access properties of an object:
 % Property "prop" of object "obj" is "obj.prop"
 
-% The simpleGameEngine class inherets from the handle class because we
+% The SimpleGameEngine class inherets from the handle class because we
 % want the game objects to be updated by their methods, specifically
 % my_figure and my_image
-classdef simpleGameEngine < handle
+classdef SimpleGameEngine < handle
     properties
         sprites = {}; % color data of the sprites
         sprites_transparency = {}; % transparency data of the sprites
@@ -32,8 +32,8 @@ classdef simpleGameEngine < handle
     end
     
     methods
-        function obj = simpleGameEngine(sprites_fname, sprite_height, sprite_width, zoom, background_color)
-            % simpleGameEngine
+        function obj = SimpleGameEngine(sprites_fname, sprite_height, sprite_width, zoom, background_color)
+            % SimpleGameEngine
             % Input: 
             %  1. File name of sprite sheet as a character array
             %  2. Height of the sprites in pixels
@@ -43,7 +43,7 @@ classdef simpleGameEngine < handle
             % Output: an SGE scene variable
             % Note: In RGB format, colors are specified as a mixture of red, green, and blue on a scale of 0 to 255. [0,0,0] is black, [255,255,255] is white, [255,0,0] is red, etc.
             % Example:
-            %     	my_scene = simpleGameEngine('tictactoe.png',16,16,5,[0,150,0]);
+            %     	my_scene = SimpleGameEngine('tictactoe.png',16,16,5,[0,150,0]);
             
             % load the input data into the object
             obj.sprite_width = sprite_width;
