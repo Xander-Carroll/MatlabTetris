@@ -183,6 +183,11 @@ while playing
         gameBoard = gameBoard.generateTitleBoard();
     end
 
+    %If the f1 key is pressed change the music.
+    if(keyHandler.getKeyState(keyHandler.Keys.f1))
+        audioPlayer = startMusicTrack("../res/remix.mp3");
+    end
+
     %This pause limits the fps based on the framerate variable.
     pause(1/framerate-toc);
     %fprintf("Framerate: %f\n", 1/toc); %TODO REMOVE: Unccoment this line to see framerate.
