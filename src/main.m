@@ -42,6 +42,7 @@ wasDownJustPressedPlayer2 = false;
 tetro = Tetromino();
 tetroPlayer2 = Tetromino();
 
+%This is set to true when the multiplayer option is selected.
 isMultiplayer = false;
 
 %Starting the main game loop. 
@@ -85,8 +86,6 @@ while playing
         if(isMultiplayer)
             [gameBoardPlayer2, tetroPlayer2, player2GameOver] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2);
         end
-
-        %fprintf("[W]: %i , [UP]: %i\n", keyHandler.getKeyState(keyHandler.Keys.w), keyHandler.getKeyState(keyHandler.Keys.upArrow));
         
         %Handle Key Input
         if(~isMultiplayer)
@@ -166,6 +165,11 @@ while playing
         %Checking for a game over.
         if(player1GameOver || player2GameOver)
             inTitleScreen = true;
+
+            if(player2GameOver)
+                gameBoard = gameBoardPlayer2;
+                drawScene(gameScene, gameBoard.getVisibleBoard());
+            end
         end
 
     end
