@@ -10,7 +10,7 @@ fprintf("Engineering 1181 SDP: Tetris V:0.0.1\n");
 framerate = 15; 
 
 %The main game scene. This will need to be drawn to every frame.
-gameScene = simpleGameEngine('../res/Tiles.png',32,32,1,[255,255,255]);
+gameScene = SimpleGameEngine('../res/Tiles.png',32,32,1,[255,255,255]);
 
 %The main game board that will hold a gird of pieces.
 gameBoard = GameBoard();
@@ -176,8 +176,8 @@ while playing
 
     %If the escape key is pressed the game closes.
     if(keyHandler.getKeyState(keyHandler.Keys.escape))
-        close(gameScene.my_figure);
-        playing = false;
+        inTitleScreen = true;
+        gameBoard = gameBoard.generateTitleBoard();
     end
 
     %This pause limits the fps based on the framerate variable.
