@@ -3,7 +3,7 @@
 %Developed by Danny, Matt, and Xander. Engineering 1181 SDP.
 
 clear; clc;
-fprintf("Engineering 1181 SDP: Tetris V:0.0.2\n");
+fprintf("Engineering 1181 SDP: Tetris V:0.0.1\n");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %The main game framerate target. (If you set the framerate too high the game won't close).
@@ -16,10 +16,8 @@ gameScene = simpleGameEngine('../res/Tiles.png',32,32,1,[255,255,255]);
 gameBoard = GameBoard();
 gameBoard = gameBoard.generateTitleBoard();
 
-%Used to determine if a piece has landed (and therefore a new piece should be made).
-collided = false;
-collideTimerMax = 5;
-collideTimer = 5;
+gameBoardPlayer2 = GameBoard();
+gameBoardPlayer2.board = uint8(ones(23,10));
 
 %Initializing the game scene. The scene must be drawn once before the game loop and before callback methods can be set.
 drawScene(gameScene, gameBoard.getVisibleBoard());
@@ -27,13 +25,20 @@ drawScene(gameScene, gameBoard.getVisibleBoard());
 %Setting a callback method for the window close event. (Handeled with function at the bottom of the script).
 set(gameScene.my_figure, 'CloseRequestFcn', @closeCallback);
 
+%Setting a callback method for key press/release events. These are given to the keyHandeler object that will be used to get key input.
+keyHandeler = KeyHandeler();
+set(gameScene.my_figure, 'KeyPressFcn', @keyHandeler.onKeyPress);
+set(gameScene.my_figure, 'KeyReleaseFcn', @keyHandeler.onKeyRelease);
+
 %The speed at which the pieces fall. A smaller speed make faster pieces.
-pieceSpeed = 5;
+pieceSpeed = 1;
+pieceSpeedPlayer2 = 5;
 
 %Creating the first piece. Once this piece lands a new piece is made.
-tetro = Tetromino(); tetroLoc = tetro.locations;
+tetro = Tetromino();
+tetroPlayer2 = Tetromino();
 
-wasDownJustPressed = false;
+isMultiplayer = false;
 
 %Starting the main game loop. 
 %playing will become false when the game window is closed (Or escape is pressed).
@@ -43,80 +48,48 @@ while playing
     tic;
 
     %Rendering the game scene.
-    drawScene(gameScene, gameBoard.getVisibleBoard());
+    if(isMultiplayer && ~inTitleScreen)
+        drawScene(gameScene, gameBoard.createTwoPlayerBoard(gameBoardPlayer2))
+    else
+        drawScene(gameScene, gameBoard.getVisibleBoard());
+    end
 
+    %Logic for the title screen.
     if (inTitleScreen) 
         [y,x] = getMouseInput(gameScene);
         if (y <= 10) %singleplayer
-            inTitleScreen = false;
-            gameBoard.board = uint8(ones(23,10));
+            isMultiplayer = false;
         else %multiplayer
-            inTitleScreen = false;
+            isMultiplayer = true;
         end
+
+        gameBoard.board = uint8(ones(23,10));
+        gameBoardPlayer2.board = uint8(ones(23,10));
+        inTitleScreen = false;
+
+        tetro = Tetromino();
+        tetro.maxTicsUntilFall = pieceSpeed;
+
+        tetroPlayer2 = Tetromino();
+        tetroPlayer2.maxTicsUntilFall = pieceSpeedPlayer2;
     else
     
         %Moving the tetromino down.
-        [gameBoard, collided] = tetro.move('d', gameBoard);
+        [gameBoard, tetro, player1GameOver] = gameBoard.movePieceDown(tetro, pieceSpeed);
     
-        %Handling user input.
-        key_down = guidata(gameScene.my_figure);
-        if(key_down)
-            %Left piece movement
-            if isequal(key_down, 'a') || isequal(key_down, 'leftarrow')
-                [gameBoard, ~] = tetro.move('l', gameBoard);
-            
-            %Right piece movement
-            elseif isequal(key_down, 'd') || isequal(key_down, 'rightarrow')
-                [gameBoard, ~] = tetro.move('r', gameBoard);
-            end
-            
-            %Start piece fast fall
-            if isequal(key_down, 's') || isequal(key_down, 'downarrow')
-                tetro.maxTicsUntilFall = 0;
-                tetro.ticsUntilFall = 0;
-                wasDownJustPressed = true;
-            end
-            
-            %Escape key to close game
-            if isequal(key_down, 'escape')
-                close(gameScene.my_figure);
-                playing = false;
-            
-            %TODO REMOVE: Temporary key input used for debuging.
-            elseif isequal(key_down, 'f1')
-                pieceSpeed = pieceSpeed - 1;
-                tetro.maxTicsUntilFall = pieceSpeed;
-                fprintf("[DEBUG]: New Piece Speed = %i\n", pieceSpeed);
-            end
-        else
-            if (wasDownJustPressed)
-                tetro.maxTicsUntilFall = pieceSpeed;
-                tetro.ticsUntilFall = pieceSpeed;
-                wasDownJustPressed = false;
-            end
+        player2GameOver = false;
+        if(isMultiplayer)
+            [gameBoardPlayer2, tetroPlayer2, player2GameOver] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2);
         end
-    
-        %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
-        if (collided)
-            if(collideTimer > 0)
-                collideTimer = collideTimer - 1;
-            else
-                collideTimer = collideTimerMax;
-    
-                if (gameBoard.isGameOver())
-                    inTitleScreen = true;
-                    gameBoard = gameBoard.generateTitleBoard();
-                else
-                    tetro = Tetromino();
-                    tetro.maxTicsUntilFall = pieceSpeed;
-                    collided = false;
-    
-                    gameBoard = gameBoard.clearCompleteRows();
-                end
-    
-            end
-    
+
+        fprintf('DOWN: %i\n', keyHandeler.getKeyState(keyHandeler.Keys.downArrow));
+        fprintf('UP: %i\n', keyHandeler.getKeyState(keyHandeler.Keys.upArrow));
+
+        %Checking for a game over.
+        if(player1GameOver || player2GameOver)
+            inTitleScreen = true;
         end
+
     end
 
     %This pause limits the fps based on the framerate variable.

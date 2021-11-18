@@ -3,6 +3,11 @@ classdef GameBoard
     properties
         %The main matrix that holds pieces.
         board
+
+        %Used to determine if a piece has landed (and therefore a new piece should be made).
+        collided = false;
+        collideTimerMax = 5;
+        collideTimer = 5;
     end
     
     methods
@@ -50,6 +55,34 @@ classdef GameBoard
             obj.board(19,8) = 20;
             
             obj.board = obj.board;
+        end
+
+        function [obj, tetro, gameOver] = movePieceDown(obj, tetro, speed)
+            [obj, obj.collided] = tetro.move('d', obj);
+
+            gameOver = false;
+
+            %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
+            if (obj.collided)
+                if(obj.collideTimer > 0)
+                    obj.collideTimer = obj.collideTimer - 1;
+                else
+                    obj.collideTimer = obj.collideTimerMax;
+                end
+    
+                if (obj.isGameOver())
+                    gameOver = true;
+                    obj = obj.generateTitleBoard();
+                else
+                    tetro = Tetromino();
+                    tetro.maxTicsUntilFall = speed;
+                    obj.collided = false;
+    
+                    obj = obj.clearCompleteRows();
+                end
+    
+            end
+    
         end
 
         %This method takes the position of a current piece before and after moving and updates the board matrix appropriatley.
@@ -106,7 +139,7 @@ classdef GameBoard
 
         %Takes an additional board as a parameter and creates a matrix that shows both boards at once.
         function returnBoard = createTwoPlayerBoard(obj, gameBoard2)
-            returnBoard = uint8(ones(23,25));
+            returnBoard = uint8(ones(20,25));
 
             board1 = obj.getVisibleBoard();
             board2 = gameBoard2.getVisibleBoard();
