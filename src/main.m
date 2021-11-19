@@ -23,7 +23,7 @@ collideTimerMax = 5;
 collideTimer = 5;
 
 %Initializing the game scene. The scene must be drawn once before the game loop and before callback methods can be set.
-drawScene(gameScene, gameBoard.getVisibleBoard());
+drawScene(gameScene, gameBoard.getVisibleBackBoard(), gameBoard.getVisibleBoard());
 
 %Setting a callback method for the window close event. (Handeled with function at the bottom of the script).
 set(gameScene.my_figure, 'CloseRequestFcn', @closeCallback);
@@ -34,26 +34,90 @@ pieceSpeed = 5;
 %Creating the first piece. Once this piece lands a new piece is made.
 tetro = Tetromino(); tetroLoc = tetro.locations;
 
+%creating title piceces
+t1 = TitleTet(1);
+t2 = TitleTet(0);
+t3 = TitleTet(1);
+t4 = TitleTet(0);
+t5 = TitleTet(1);
+t6 = TitleTet(0);
+t7 = TitleTet(1);
+t8 = TitleTet(0);
+t9 = TitleTet(1);
+t10 = TitleTet(0);
+t11 = TitleTet(1);
+t12 = TitleTet(0);
+t13 = TitleTet(1);
+t14 = TitleTet(0);
+t15 = TitleTet(1);
+t16 = TitleTet(0);
+
+titleTetPieces = [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16];
+
 wasDownJustPressed = false;
+
 
 %Starting the main game loop. 
 %playing will become false when the game window is closed (Or escape is pressed).
 playing = true;
 inTitleScreen = true;
+titleTickCounter = 0;
+tetCounter = 1;
+isSpawning = true;
+
 while playing
     tic;
 
     %Rendering the game scene.
-    drawScene(gameScene, gameBoard.getVisibleBoard());
+    drawScene(gameScene, gameBoard.getVisibleBackBoard(), gameBoard.getVisibleBoard());
 
-    if (inTitleScreen) 
-        k = getKeyboardInput(gameScene);
-        if (isequal(k,'1')) %singleplayer
-            inTitleScreen = false;
-            gameBoard.board = uint8(ones(23,18));
-        else %multiplayer
-            inTitleScreen = false;
-            gameBoard.board = uint8(ones(23,18));
+    if (inTitleScreen)
+        while inTitleScreen
+            tic;
+            if mod(titleTickCounter,4) == 0 && isSpawning %spawn titleTet pieces
+                gameBoard.backgroundBoard(titleTetPieces(tetCounter).getY(),titleTetPieces(tetCounter).getX()) = titleTetPieces(tetCounter).getColor();
+                titleTetPieces(tetCounter).isOnBoard = true;
+                tetCounter = tetCounter + 1;
+                if tetCounter == 17
+                    isSpawning = false;
+                end
+            end
+    
+            k = guidata(gameScene.my_figure);
+            if(k)
+                if (isequal(k,'1')) %singleplayer
+                    inTitleScreen = false;
+                    gameBoard.board = uint8(ones(23,18));
+                    gameBoard.backgroundBoard = uint8(ones(23,18));
+                elseif (isequal(k,'0')) %multiplayer
+                    inTitleScreen = false;
+                    close(gameScene.my_figure);
+                    playing = false;
+                else
+                    inTitleScreen = false;
+                    close(gameScene.my_figure);
+                    playing = false; 
+                end
+            else
+                for i = 1:16 %update titletet locations
+                    if titleTetPieces(i).isOnBoard == true
+                        gameBoard.backgroundBoard(titleTetPieces(i).getY(), titleTetPieces(i).getX()) =  1;
+                        titleTetPieces(i).moveDown();
+                    end
+                end
+    
+                for i = 1:16 %update gameboard with new titleTet locations
+                    if titleTetPieces(i).isOnBoard == true
+                        gameBoard.backgroundBoard(titleTetPieces(i).getY(), titleTetPieces(i).getX()) =  titleTetPieces(i).getColor();
+                    end
+                end
+
+                drawScene(gameScene, gameBoard.getVisibleBackBoard(), gameBoard.getVisibleBoard());
+                if titleTickCounter < 200
+                    titleTickCounter = titleTickCounter + 1;
+                end
+                pause(1/4-toc);
+            end
         end
     else
     

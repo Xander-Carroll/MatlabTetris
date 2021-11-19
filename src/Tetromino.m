@@ -19,10 +19,15 @@ classdef Tetromino < handle
 
     methods
         %Picks a random piece from the list of 7 and initializes the class properities based on the piece picked.
-        function obj = Tetromino()
+        function obj = Tetromino(type)
 
             %Used to pick a random tetromino piece.
-            obj.type = randi(7);
+            if nargin > 0
+                obj.type = type;
+            
+            else
+                obj.type = randi(7);
+            end
             
             switch obj.type
                 case 1 %Line Piece
@@ -33,6 +38,7 @@ classdef Tetromino < handle
                     obj.right = 7;
                     obj.top = 1;
                     obj.bottom = 1;
+
  
                 case 2 %Square Piece
                     obj.color = 6;
@@ -147,6 +153,34 @@ classdef Tetromino < handle
             obj.maxTicsUntilFall = tetro.maxTicsUntilFall;
             obj.ticsUntilFall = tetro.ticsUntilFall;
         end
+        function locations = displayNext(obj)
+            switch obj.type
+                case 1
+                    locations = [[4,12],[4,13],[4,14],[4,15]];
+                case 2
+                    locations = [[4,12],[4,13],[5,12],[5,13]];
+                case 3
+                    locations = [[4,12],[5,12],[5,13],[5,14]];
+                case 4
+                    locations = [[4,12],[5,10],[5,11],[5,12]];
+                case 5
+                    locations = [[4,12],[4,13],[5,11],[5,12]];
+                case 6
+                    locations = [[4,12],[4,13],[4,13],[4,14]];
+                case 7
+                    locations = [[4,12],[5,11],[5,12],[5,13]];
+
+            end
+
+            
+            %             for  y = 2:2:8
+%                 obj.locations(y) = obj.locations(y) + 5;
+%             end
+%             for  x = 1:2:8
+%                 obj.locations(x) = obj.locations(x) + 5;
+%             end
+
+        end
 
     end
 end
@@ -217,4 +251,5 @@ function isCollide = checkCollide(obj, gameboard, dir)
             end
     end
     isCollide = false;
+
 end

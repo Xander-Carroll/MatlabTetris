@@ -3,6 +3,7 @@ classdef GameBoard
     properties
         %The main matrix that holds pieces.
         board
+        backgroundBoard
     end
     
     methods
@@ -10,10 +11,13 @@ classdef GameBoard
         function obj = GameBoard()
             %By initializing with ints memory is conserved compared to the doubles that would normally be used.
             obj.board = uint8(ones(23,18));
+            obj.backgroundBoard = uint8(ones(23,18));
             
         end
         
         function obj = generateTitleBoard(obj)
+
+
             for x = 2:17
                 obj.board(4, x) = 57;
                 obj.board(23, x) = 51;
@@ -40,36 +44,43 @@ classdef GameBoard
             obj.board(9,7) = 30;%T
             obj.board(9,8) = 15;%E
             obj.board(9,9) = 30;%T
-            obj.board(9,10) =28;%R
+            obj.board(9,10) = 28;%R
             obj.board(9,11) = 19;%I
             obj.board(9,12) = 29;%S
 
+            %Sideways T pieces by the MATLAB and TETRIS
+            obj.board(8,6) = 56;
+            obj.board(8,13) = 50;
+            obj.board(9,6) = 56;
+            obj.board(9,13) = 50;
+            
+            
+            %for x = 2:17
+            %    obj.board(11, x) = 48;
+            %    obj.board(12, x) = 47;
+            %end
+        
             %matlab logo
             for x = 7: 12
             obj.board(7,x) = 48;
             end
-            obj.board(7,6) = 48;
-            obj.board(8,6) = 48;
-            obj.board(7,13) = 48;
-            obj.board(8,13) = 48;
+            %obj.board(7,6) = 48;
+            %obj.board(8,6) = 48;
+            %obj.board(7,13) = 48;
+            %obj.board(8,13) = 48;
             
             %tetris logo
             for x = 7: 12
             obj.board(10,x) = 47;
             end
-            obj.board(10,6) = 47;
-            obj.board(10,13) = 47;
-            obj.board(9,6) = 47;
-            obj.board(9,13) = 47;
+            %obj.board(10,6) = 47;
+            %obj.board(10,13) = 47;
+            %obj.board(9,6) = 47;
+            %obj.board(9,13) = 47;
             
 
 
-            obj.board(16,7) = 26;%P
-            obj.board(16,8) = 28;%R
-            obj.board(16,9) = 15;%E
-            obj.board(16,10) = 29;%S
-            obj.board(16,11) = 29;%S
-            obj.board(16,12) = 37;%1
+
 
          
             
@@ -89,7 +100,15 @@ classdef GameBoard
             obj.board(15,15) = 15;%E
             obj.board(15,16) = 28;%R
 
+            obj.board(16,7) = 26;%P
+            obj.board(16,8) = 28;%R
+            obj.board(16,9) = 15;%E
+            obj.board(16,10) = 29;%S
+            obj.board(16,11) = 29;%S
+            obj.board(16,12) = 37;%1
             
+
+
             obj.board(19,4) = 23;%M
             obj.board(19,5) = 31;%U
             obj.board(19,6) = 22;%L
@@ -109,6 +128,57 @@ classdef GameBoard
             obj.board(20,10) = 29;%S
             obj.board(20,11) = 29;%S
             obj.board(20,12) = 46;%0
+
+
+
+
+            %pieces around single and multi player
+            obj.board(15,2) = 56;%left T
+            obj.board(19,3) = 56;%left T
+
+            obj.board(15,17) = 50;%right T
+            obj.board(19,16) = 50;%right T
+            
+            obj.board(16,6) = 53;%top right corner
+            obj.board(20,6) = 53;%top right corner
+
+            obj.board(16,13) = 52;%top left corner
+            obj.board(20,13) = 52;%top left corner
+
+            
+            %%single
+            
+            for z = 3:16 %upside down T
+                 obj.board(14,z) = 51;
+            end
+            
+            
+            for z = 7:12 %regualr T
+                obj.board(17,z) = 57;
+            end
+
+            for z = 1:3 %regualr T
+                obj.board(16,z+2) = 57;
+                obj.board(16,z+13) = 57;
+            end
+
+            %%multi
+            for z = 1:2 %regualr T
+                obj.board(20,z+3) = 57;
+                obj.board(20,z+13) = 57;
+            end
+      
+
+            for z = 4:15 %upside down T
+                obj.board(18,z) = 51;
+            end
+            for z = 7:12 %regualr T
+                obj.board(21,z) = 57;
+            end
+            
+
+
+
             
             for y = 1:23
                 for x = 1:18
@@ -121,9 +191,6 @@ classdef GameBoard
             obj.board = obj.board;
         end
         
-        function obj = generateSideBoard(obj)
-            
-        end
 
 
         %This method takes the position of a current piece before and after moving and updates the board matrix appropriatley.
@@ -144,6 +211,14 @@ classdef GameBoard
         %This function returns a board that dosent show those three rows.
         function visibileBoard = getVisibleBoard(obj)
             visibileBoard = obj.board(4:23, :);
+        end
+        
+        function visibleBackBoard = getVisibleBackBoard(obj)
+            visibleBackBoard = obj.backgroundBoard(4:23, :);
+        end
+
+        function setBackBoard(obj, y, x, color)
+            obj.backgroundBoard(y,x) = color;
         end
         
         %This function should be called when a piece lands to determine if any lines need to be cleared.
