@@ -10,7 +10,7 @@ fprintf("Engineering 1181 SDP: Tetris V:1.0.0\n");
 framerate = 15; 
 
 %The main game scene. This will need to be drawn to every frame.
-gameScene = SimpleGameEngine('../res/Tiles.png',32,32,1,[255,255,255]);
+gameScene = SimpleGameEngine('../res/NewTiles.png',32,32,1,[255,255,255]);
 
 %The main game board that will hold a gird of pieces.
 gameBoard = GameBoard();
