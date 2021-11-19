@@ -7,7 +7,9 @@ fprintf("Engineering 1181 SDP: Tetris V:1.1.0\n");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %The main game framerate target. (If you set the framerate too high the game won't close).
-framerate = 15; 
+inGameFramerate = 15;
+inTitleFramerate = 10;
+framerate = 10; 
 
 %The main game board that will hold a gird of pieces.
 gameBoard = GameBoard();
@@ -22,6 +24,8 @@ gameScene = initGameEngine('../res/OldTiles.png', gameBoard, keyHandler);
 %The speed at which the pieces fall. A smaller speed make faster pieces.
 pieceSpeed = 5;
 pieceSpeedPlayer2 = 5;
+
+pieceFastFallSpeed = 0;
 
 %Used for fastfall.
 wasDownJustPressed = false;
@@ -57,7 +61,7 @@ while playing
 
     %Logic for the title screen.
     if (inTitleScreen)
-        framerate = 10;
+        framerate = inTitleFramerate;
         [gameBoard, playerCount] = gameBoard.renderTitleScreen(keyHandler);
 
         if(playerCount ~= 0)
@@ -77,7 +81,7 @@ while playing
             tetroPlayer2 = Tetromino();
             tetroPlayer2.maxTicsUntilFall = pieceSpeedPlayer2;
 
-            framerate = 15;
+            framerate = inGameFramerate;
         end
 
         %If the f1 key is pressed change the music.
@@ -111,8 +115,10 @@ while playing
             %If the down key is pressed.
             if(keyHandler.getKeyState(keyHandler.Keys.s) || keyHandler.getKeyState(keyHandler.Keys.downArrow))
                 wasDownJustPressed = true;
-                tetro.maxTicsUntilFall = 0;
-                tetro.ticsUntilFall = 0;
+                if(tetro.maxTicsUntilFall ~= pieceFastFallSpeed)
+                    tetro.maxTicsUntilFall = pieceFastFallSpeed;
+                    tetro.ticsUntilFall = 0;
+                end
             end
 
             %If the down key is released.
@@ -140,8 +146,10 @@ while playing
             %If the down key is pressed for player 1.
             if(keyHandler.getKeyState(keyHandler.Keys.s))
                 wasDownJustPressed = true;
-                tetro.maxTicsUntilFall = 0;
-                tetro.ticsUntilFall = 0;
+                if(tetro.maxTicsUntilFall ~= pieceFastFallSpeed)
+                    tetro.maxTicsUntilFall = pieceFastFallSpeed;
+                    tetro.ticsUntilFall = 0;
+                end
             end
 
             %If the down key is released for player 1.
@@ -169,8 +177,10 @@ while playing
             %If the down key is pressed for player 2.
             if(keyHandler.getKeyState(keyHandler.Keys.downArrow))
                 wasDownJustPressedPlayer2 = true;
-                tetroPlayer2.maxTicsUntilFall = 0;
-                tetroPlayer2.ticsUntilFall = 0;
+                if(tetroPlayer2.maxTicsUntilFall ~= pieceFastFallSpeed)
+                    tetroPlayer2.maxTicsUntilFall = pieceFastFallSpeed;
+                    tetroPlayer2.ticsUntilFall = 0;
+                end
             end
 
             %If the down key is released for player 2.
