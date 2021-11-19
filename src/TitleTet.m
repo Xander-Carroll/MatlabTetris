@@ -11,12 +11,14 @@ classdef TitleTet < handle
     
     methods
         function obj = TitleTet(isLeft)
-            obj.isLeft = isLeft;
-            obj.color = randi(7) + 1;
-            obj.isOnBoard = false;
-            obj.locationY = 1;
-            obj.randX();
 
+            if nargin
+                obj.isLeft = isLeft;
+                obj.color = randi(7) + 1;
+                obj.isOnBoard = false;
+                obj.locationY = 1;
+                obj.randX();
+            end
          
         end
 

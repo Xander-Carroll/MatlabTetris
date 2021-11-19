@@ -138,7 +138,7 @@ classdef Tetromino < handle
                     end
             end
 
-            gameboard = gameboard.update(pre, obj);
+            gameboard = gameboard.updateTetrisPiece(pre, obj);
         end
         
         function obj = copytetro(obj, tetro)

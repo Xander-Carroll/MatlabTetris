@@ -11,7 +11,7 @@ framerate = 15;
 
 %The main game scene. This will need to be drawn to every frame.
 
-gameScene = simpleGameEngine('/Users/blakemorse/Desktop/MatlabTetris/res/Tiles.png',32,32,1,[255,255,255]);
+gameScene = simpleGameEngine('../res/Tiles.png',32,32,1,[255,255,255]);
 
 %The main game board that will hold a gird of pieces.
 gameBoard = GameBoard();
@@ -32,38 +32,30 @@ set(gameScene.my_figure, 'CloseRequestFcn', @closeCallback);
 pieceSpeed = 5;
 
 %Creating the first piece. Once this piece lands a new piece is made.
-tetro = Tetromino(randi(7)); tetroLoc = tetro.locations;
-%creating the next piece to display on the side
-nextTetro = Tetromino(randi(7));
-nextLocs = displayNext(nextTetro);
+tetro = Tetromino(); tetroLoc = tetro.locations;
+
+for i = 1:16
+    titleTetPieces(i) = TitleTet(mod(i, 2));
+end
+
 wasDownJustPressed = false;
 
 %Starting the main game loop. 
 %playing will become false when the game window is closed (Or escape is pressed).
 playing = true;
 inTitleScreen = true;
+
 while playing
     tic;
 
     %Rendering the game scene.
-    for int y = 1
-        f
-    gameboard.board(nextLocs) = nextTetro.color;
     drawScene(gameScene, gameBoard.getVisibleBoard());
 
-    if (inTitleScreen) 
-        k = getKeyboardInput(gameScene);
-        if (isequal(k,'1')) %singleplayer
-            inTitleScreen = false;
-            gameBoard.board = uint8(ones(23,18));
-            displayNext(nextTetro);
-        else %multiplayer
-            inTitleScreen = false;
-            gameBoard.board = uint8(ones(23,18));
-            displayNext(nextTetro);
-        end
+    if (inTitleScreen)
+        gameBoard.renderTitleScreen(titleTetPieces);
+
     else
-        
+    
         %Moving the tetromino down.
         [gameBoard, collided] = tetro.move('d', gameBoard);
     
@@ -116,16 +108,11 @@ while playing
                     inTitleScreen = true;
                     gameBoard = gameBoard.generateTitleBoard();
                 else
-                    
-                    tetro = Tetromino(nextTetro.type);
-                    nextTetro = Tetromino(randi(7));
-                    displayNext(nextTetro);
-
+                    tetro = Tetromino();
                     tetro.maxTicsUntilFall = pieceSpeed;
                     collided = false;
     
-                    [gameBoard, howManyLines] = gameBoard.clearCompleteRows();
-
+                    gameBoard = gameBoard.clearCompleteRows();
                 end
     
             end

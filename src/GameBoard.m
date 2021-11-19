@@ -4,6 +4,11 @@ classdef GameBoard
         %The main matrix that holds pieces.
         board
         backgroundBoard
+
+        %Variables used to display the title screen.
+        titleTickCounter = 0;
+        tetCounter = 1;
+        isSpawning = true;
     end
     
     methods
@@ -12,16 +17,15 @@ classdef GameBoard
             %By initializing with ints memory is conserved compared to the doubles that would normally be used.
             obj.board = uint8(ones(23,18));
             obj.backgroundBoard = uint8(ones(23,18));
-            
         end
         
+        %Edits the supplied gameBoard object to make it show a title screen.
         function obj = generateTitleBoard(obj)
-
-
             for x = 2:17
                 obj.board(4, x) = 57;
                 obj.board(23, x) = 51;
             end
+
             for y = 5:22
                 obj.board(y, 1) = 50;
                 obj.board(y, 18) = 56;
@@ -54,7 +58,6 @@ classdef GameBoard
             obj.board(9,6) = 56;
             obj.board(9,13) = 50;
             
-            
             %for x = 2:17
             %    obj.board(11, x) = 48;
             %    obj.board(12, x) = 47;
@@ -77,12 +80,6 @@ classdef GameBoard
             %obj.board(10,13) = 47;
             %obj.board(9,6) = 47;
             %obj.board(9,13) = 47;
-            
-
-
-
-
-         
             
 
             obj.board(15,3) = 29;%S
@@ -108,7 +105,6 @@ classdef GameBoard
             obj.board(16,12) = 37;%1
             
 
-
             obj.board(19,4) = 23;%M
             obj.board(19,5) = 31;%U
             obj.board(19,6) = 22;%L
@@ -128,8 +124,6 @@ classdef GameBoard
             obj.board(20,10) = 29;%S
             obj.board(20,11) = 29;%S
             obj.board(20,12) = 46;%0
-
-
 
 
             %pieces around single and multi player
@@ -175,11 +169,8 @@ classdef GameBoard
             for z = 7:12 %regualr T
                 obj.board(21,z) = 57;
             end
-            
 
 
-
-            
             for y = 1:23
                 for x = 1:18
                     if obj.board(y,x) == 1
@@ -191,10 +182,8 @@ classdef GameBoard
             obj.board = obj.board;
         end
         
-
-
         %This method takes the position of a current piece before and after moving and updates the board matrix appropriatley.
-        function obj = update(obj, pre, post)            
+        function obj = updateTetrisPiece(obj, pre, post)            
             %Removes the piece from its old location.
             for i = 1:2:8
                 obj.board(pre.locations(i), pre.locations(i+1)) = 1;
@@ -217,10 +206,6 @@ classdef GameBoard
             visibleBackBoard = obj.backgroundBoard(4:23, :);
         end
 
-        function setBackBoard(obj, y, x, color)
-            obj.backgroundBoard(y,x) = color;
-        end
-        
         %This function should be called when a piece lands to determine if any lines need to be cleared.
         function obj = clearCompleteRows(obj)
             for y = 1:length(obj.board(:,1))
@@ -267,5 +252,46 @@ classdef GameBoard
             end
         end
 
+        %Updates TitleTet Pieces when the gameBoard is displaying a title screen.
+        function [obj, inTitleScreen] = renderTitleScreen(obj, titleTetPieces, gameScene)
+            inTitleScreen = true;
+
+            %Spawning titleTet pieces
+            if mod(obj.titleTickCounter, 4) == 0 && obj.isSpawning
+                obj.backgroundBoard(titleTetPieces(obj.tetCounter).getY(),titleTetPieces(obj.tetCounter).getX()) = titleTetPieces(obj.tetCounter).getColor();
+                titleTetPieces(obj.tetCounter).isOnBoard = true;
+                obj.tetCounter = obj.tetCounter + 1;
+            
+                if obj.tetCounter == 17
+                    obj.isSpawning = false;
+                end
+
+            end
+
+            k = guidata(gameScene.my_figure);
+            if(k)
+                if (isequal(k,'1')) %singleplayer
+                    inTitleScreen = false;
+                    obj.board = uint8(ones(23,10)); 
+                end
+            else
+                for i = 1:16 %update titletet locations
+                    if titleTetPieces(i).isOnBoard == true
+                        obj.backgroundBoard(titleTetPieces(i).getY(), titleTetPieces(i).getX()) =  1;
+                        titleTetPieces(i).moveDown();
+                    end
+                end
+       
+                for i = 1:16 %update gameboard with new titleTet locations
+                    if titleTetPieces(i).isOnBoard == true
+                        obj.backgroundBoard(titleTetPieces(i).getY(), titleTetPieces(i).getX()) =  titleTetPieces(i).getColor();
+                    end
+                end    
+                        
+                if obj.titleTickCounter < 200
+                    obj.titleTickCounter = obj.titleTickCounter + 1;
+                end
+            end
+        end
     end
 end
