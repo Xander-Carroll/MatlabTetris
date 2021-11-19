@@ -17,7 +17,7 @@ gameBoardPlayer2 = GameBoard();
 gameBoardPlayer2.board = uint8(ones(23,10));
 
 keyHandler = KeyHandler();
-gameScene = initGameEngine('../res/oldTiles.png', gameBoard, keyHandler);
+gameScene = initGameEngine('../res/OldTiles.png', gameBoard, keyHandler);
 
 %The speed at which the pieces fall. A smaller speed make faster pieces.
 pieceSpeed = 5;
@@ -56,7 +56,8 @@ while playing
     end
 
     %Logic for the title screen.
-    if (inTitleScreen) 
+    if (inTitleScreen)
+        framerate = 10;
         [gameBoard, playerCount] = gameBoard.renderTitleScreen(keyHandler);
 
         if(playerCount ~= 0)
@@ -75,6 +76,8 @@ while playing
     
             tetroPlayer2 = Tetromino();
             tetroPlayer2.maxTicsUntilFall = pieceSpeedPlayer2;
+
+            framerate = 15;
         end
 
         %If the f1 key is pressed change the music.
@@ -213,7 +216,7 @@ function gameScene = loadNewTileset(gameScene, filePath, gameBoard, keyHandler)
     pause(0.1);
 
     assignin('base', 'playing', true);
-    gameScene = initGameEngine("../res/NewTiles.png", gameBoard, keyHandler);
+    gameScene = initGameEngine(filePath, gameBoard, keyHandler);
     figure(gameScene.my_figure);
 end
 

@@ -11,6 +11,8 @@ classdef GameBoard
         backgroundBoard
 
         %Variables used to display the title screen.
+        titleBackgroundColor = 1;
+
         titleTickCounter = 0;
         tetCounter = 1;
         isSpawning = true;
@@ -24,7 +26,7 @@ classdef GameBoard
             %By initializing with ints memory is conserved compared to the doubles that would normally be used.
             obj.board = uint8(ones(23,18));
             obj.backgroundBoard = uint8(ones(23,18));
-            obj.backgroundBoard(:) = 59;
+            obj.backgroundBoard(:) = obj.titleBackgroundColor;
 
             %This loop is used to create the titleTet pieces used to animate the title screen.
             for i = 1:16
@@ -320,7 +322,7 @@ classdef GameBoard
             else
                 for i = 1:16 %update titletet locations
                     if obj.titleTetPieces(i).isOnBoard == true
-                        obj.backgroundBoard(obj.titleTetPieces(i).getY(), obj.titleTetPieces(i).getX()) =  59;
+                        obj.backgroundBoard(obj.titleTetPieces(i).getY(), obj.titleTetPieces(i).getX()) =  obj.titleBackgroundColor;
                         obj.titleTetPieces(i).moveDown();
                     end
                 end
