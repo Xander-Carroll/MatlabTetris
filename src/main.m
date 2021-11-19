@@ -17,7 +17,7 @@ gameBoardPlayer2 = GameBoard();
 gameBoardPlayer2.board = uint8(ones(23,10));
 
 keyHandler = KeyHandler();
-gameScene = initGameEngine('../res/oldTiles.png', gameBoard, keyHandler);
+gameScene = initGameEngine('../res/OldTiles.png', gameBoard, keyHandler);
 
 %The speed at which the pieces fall. A smaller speed make faster pieces.
 pieceSpeed = 5;
