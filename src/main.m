@@ -3,7 +3,7 @@
 %Developed by Danny, Matt, and Xander. Engineering 1181 SDP.
 
 clear; clc;
-fprintf("Engineering 1181 SDP: Tetris V:1.0.0\n");
+fprintf("Engineering 1181 SDP: Tetris V:1.1.0\n");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %The main game framerate target. (If you set the framerate too high the game won't close).
@@ -75,6 +75,12 @@ while playing
     
             tetroPlayer2 = Tetromino();
             tetroPlayer2.maxTicsUntilFall = pieceSpeedPlayer2;
+        end
+
+        %If the f1 key is pressed change the music.
+        if(keyHandler.getKeyState(keyHandler.Keys.f1))
+            audioPlayer = startMusicTrack("../res/remix.mp3");
+            gameScene = loadNewTileset(gameScene, "../res/NewTiles.png", gameBoard, keyHandler);
         end
 
     else
@@ -189,13 +195,6 @@ while playing
     if(keyHandler.getKeyState(keyHandler.Keys.escape))
         inTitleScreen = true;
         gameBoard = gameBoard.generateTitleBoard();
-    end
-
-    %If the f1 key is pressed change the music.
-    if(keyHandler.getKeyState(keyHandler.Keys.f1))
-        audioPlayer = startMusicTrack("../res/remix.mp3");
-        gameScene = loadNewTileset(gameScene, "../res/NewTiles.png", gameBoard, keyHandler);
-        
     end
 
     %This pause limits the fps based on the framerate variable.
