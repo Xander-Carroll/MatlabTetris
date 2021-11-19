@@ -1,7 +1,7 @@
 classdef KeyHandler < handle
     properties (Constant)
         Keys = struct(  'upArrow', 1, 'downArrow', 2, 'leftArrow', 3, 'rightArrow', 4, ...
-                        'w', 5, 'a', 6, 's', 7, 'd', 8, 'escape', 9, 'f1', 10);
+                        'w', 5, 'a', 6, 's', 7, 'd', 8, 'escape', 9, 'key0', 10, 'key1', 11, 'f1', 12);
     end
 
     properties
@@ -35,6 +35,10 @@ classdef KeyHandler < handle
 
             if(isequal(event.Key, 'escape'))
                 obj.currentKeys(obj.Keys.escape) = true;
+            elseif(isequal(event.Key, '0'))
+                obj.currentKeys(obj.Keys.key0) = true;
+            elseif(isequal(event.Key, '1'))
+                obj.currentKeys(obj.Keys.key1) = true;
             elseif(isequal(event.Key, 'f1'))
                 obj.currentKeys(obj.Keys.f1) = true;
             end
@@ -65,6 +69,10 @@ classdef KeyHandler < handle
 
             if(isequal(event.Key, 'escape'))
                 obj.currentKeys(obj.Keys.escape) = false;
+            elseif(isequal(event.Key, '0'))
+                obj.currentKeys(obj.Keys.key0) = false;
+            elseif(isequal(event.Key, '1'))
+                obj.currentKeys(obj.Keys.key1) = false;
             elseif(isequal(event.Key, 'f1'))
                 obj.currentKeys(obj.Keys.f1) = false;
             end

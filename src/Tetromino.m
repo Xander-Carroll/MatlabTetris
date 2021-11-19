@@ -21,12 +21,16 @@ classdef Tetromino < handle
 
     methods
         %Picks a random piece from the list of 7 and initializes the class properities based on the piece picked.
-        function obj = Tetromino()
+        function obj = Tetromino(type)
 
             %Used to pick a random tetromino piece.
-            obj.type = randi(7);
-            % obj.type = 1 + randi(6);
-
+            if nargin > 0
+                obj.type = type;
+            
+            else
+                obj.type = randi(7);
+            end
+            
             switch obj.type
                 case 1 %Line Piece
                     obj.color = 8;
@@ -148,7 +152,7 @@ classdef Tetromino < handle
                     end
             end
 
-            gameboard = gameboard.update(pre, obj);
+            gameboard = gameboard.updateTetrisPiece(pre, obj);
         end
         
         %Function copies all properties of one tetro to another
@@ -248,7 +252,7 @@ classdef Tetromino < handle
                 obj.rstate = 0;
             end
 
-            gameboard = gameboard.update(pre, obj);
+            gameboard = gameboard.updateTetrisPiece(pre, obj);
         end
     end
 end
