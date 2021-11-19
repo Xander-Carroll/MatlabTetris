@@ -225,6 +225,8 @@ classdef GameBoard
 
                 end
     
+            else
+                obj.collideTimer = obj.collideTimerMax;
             end
     
         end
