@@ -23,8 +23,8 @@ Fourthly, the controls of the game are as follows:
 Title Screen:           Single Player:                  Multiplayer:
 1 - Single Player       w/up - Rotate Piece             w/a/s/d - Player 1 Controls
 0 - Multiplayer         a/left arrow - Move Left        up/left/down/right - Player 2 Controls
-f1 - Easter Egg         s/down arrow - Fastfall         esc - Exit to Title Screen
-                        d/right arrow - Move Right
+esc - Close Game        s/down arrow - Fastfall         esc - Exit to Title Screen
+f1 - Easter Egg         d/right arrow - Move Right
                         esc - Exit to Title Screen  
 
 Finally the purpose of the following files will be briefly summarized:

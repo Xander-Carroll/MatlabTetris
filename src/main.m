@@ -89,6 +89,12 @@ while playing
             framerate = inGameFramerate;
         end
 
+        %If the escape key is pressed the game exits.
+        if(keyHandler.getKeyState(keyHandler.Keys.escape))
+            close(gameScene.my_figure);
+            playing = false;
+        end
+
         %If the f1 key is pressed change the music.
         if(keyHandler.getKeyState(keyHandler.Keys.f1))
             audioPlayer = startMusicTrack("../res/remix.mp3");
@@ -251,18 +257,18 @@ while playing
             end
         end
 
+        %If the escape key is pressed the game returns to the title screen 
+        if(keyHandler.getKeyState(keyHandler.Keys.escape))
+            inTitleScreen = true;
+            gameBoard = gameBoard.generateTitleBoard();
+        end
+
         %Checking for a game over.
         if(player1GameOver || player2GameOver)
             inTitleScreen = true;
             gameBoard = gameBoard.generateTitleBoard();
         end
 
-    end
-
-    %If the escape key is pressed the game closes.
-    if(keyHandler.getKeyState(keyHandler.Keys.escape))
-        inTitleScreen = true;
-        gameBoard = gameBoard.generateTitleBoard();
     end
 
     %This pause limits the fps based on the framerate variable.
