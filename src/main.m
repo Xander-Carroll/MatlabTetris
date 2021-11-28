@@ -98,11 +98,40 @@ while playing
     else
     
         %Moving the tetromino down.
-        [gameBoard, tetro, player1GameOver] = gameBoard.movePieceDown(tetro, pieceSpeed);
+        [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed);
     
+
+         if(keyHandler.getKeyState(keyHandler.Keys.f1))
+            gameBoard = gameBoard.queExtraRows(22);
+         end
+
         player2GameOver = false;
         if(isMultiplayer)
-            [gameBoardPlayer2, tetroPlayer2, player2GameOver] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2);
+            [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2);
+
+            %If the game is multiplayer then clearingRows gives rows to your oponenet.
+            if(clearedRows == 2)
+                clearedRows = 0;
+                gameBoardPlayer2 = gameBoardPlayer2.queExtraRows(1);
+            elseif (clearedRows == 3)
+                clearedRows = 0;
+                gameBoardPlayer2 = gameBoardPlayer2.queExtraRows(2);
+            elseif (clearedRows == 4)
+                clearedRows = 0;
+                gameBoardPlayer2 = gameBoardPlayer2.queExtraRows(4);
+            end
+
+            %If the game is multiplayer then clearingRows gives rows to your oponenet.
+            if(clearedRowsPlayer2 == 2)
+                clearedRowsPlayer2 = 0;
+                gameBoard= gameBoard.queExtraRows(1);
+            elseif (clearedRowsPlayer2 == 3)
+                clearedRowsPlayer2 = 0;
+                gameBoard = gameBoard.queExtraRows(2);
+            elseif (clearedRowsPlayer2 == 4)
+                clearedRowsPlayer2 = 0;
+                gameBoard = gameBoard.queExtraRows(4);
+            end
         end
         
         %Handle Key Input
