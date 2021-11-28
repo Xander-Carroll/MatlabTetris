@@ -32,9 +32,9 @@ wasDownJustPressed = false;
 wasDownJustPressedPlayer2 = false;
 
 %Used to rotate pieces.
-rotateKeyMaxTime = 2;
-rotateKeyTimer = 0;
-rotateKeyTimerPlayer2 = 0;
+rotateKeyMaxTime = 3;
+rotateKeyTimer = rotateKeyMaxTime;
+rotateKeyTimerPlayer2 = rotateKeyMaxTime;
 
 %Starts music
 audioPlayer = startMusicTrack("../res/original.mp3");
@@ -141,8 +141,6 @@ while playing
                 else
                     rotateKeyTimer = rotateKeyTimer - 1;
                 end
-            else
-                rotateKeyTimer = 0;
             end
         else
             %If the left key is pressed for player 1.
@@ -173,14 +171,7 @@ while playing
 
             %If the rotate key is pressed for player 1.
             if(keyHandler.getKeyState(keyHandler.Keys.w))
-                if(rotateKeyTimer == 0)
-                    rotateKeyTimer = rotateKeyMaxTime;
-                    gameBoard = tetro.rotate(gameBoard);
-                else
-                    rotateKeyTimer = rotateKeyTimer - 1;
-                end
-            else
-                rotateKeyTimer = 0;
+                gameBoard = tetro.rotate(gameBoard);
             end
 
             %If the left key is pressed for player 2.
@@ -210,15 +201,8 @@ while playing
             end
 
             %If the rotate key is pressed for player 2.
-            if(keyHandler.getKeyState(keyHandler.Keys.upArrow))
-                if(rotateKeyTimerPlayer2 == 0)
-                    rotateKeyTimerPlayer2 = rotateKeyMaxTime;
-                    gameBoardPlayer2 = tetroPlayer2.rotate(gameBoardPlayer2);
-                else
-                    rotateKeyTimerPlayer2 = rotateKeyTimerPlayer2 - 1;
-                end
-            else
-                rotateKeyTimerPlayer2 = 0;
+            if (keyHandler.getKeyState(keyHandler.Keys.upArrow))
+                gameBoardPlayer2 = tetroPlayer2.rotate(gameBoardPlayer2);
             end
         end
 
