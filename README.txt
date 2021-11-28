@@ -5,20 +5,20 @@
 -------------Engineering 1181 SDP-------------
 
 
-This README contains notes about the project structrure and game for reference.
+This README contains notes about the project structure and game for reference.
 
-Firstly the file src/main.m is the file that should be run to start the game.
+Firstly, the file src/main.m is the file that should be run to start the game.
 
-Secondly it is importatnt to note that the game may not run as intended on the web
-IDE version of Matlab. It is advised that the game be run on the donwloaded version
+Secondly, it is important to note that the game may not run as intended on the web
+IDE version of Matlab. It is advised that the game be run on the download version
 for best performance.
 
-Thirdly the download for the game should include a folder titled 'Matlab Tetris'.
+Thirdly, the download for the game should include a folder titled 'Matlab Tetris'.
 Within this folder should be a src and res folder. These folders should not be moved
 or renamed. The src folder includes all of the source code for the game while the res
 folder contains assets such as art and sound files that are needed to run the game.
 
-Fourthly the controls of the game are as follows:
+Fourthly, the controls of the game are as follows:
 
 Title Screen:           Single Player:                  Multiplayer:
 1 - Single Player       w/up - Rotate Piece             w/a/s/d - Player 1 Controls
@@ -31,7 +31,7 @@ Finally the purpose of the following files will be briefly summarized:
 
 GameBoard.m - A class that can be used to create a grid that will hold pieces. 
     The class also contains various functions used for displaying the board.
-KeyHandler.m - A class that can be used to gather keyInput from more than one
+KeyHandler.m - A class that can be used to gather key input from more than one
     key at a time.
 main.m - The main script file that is used to start the game.
 SimpleGameEngine.m - A file provided by the Engineering 1181 course used to display 
