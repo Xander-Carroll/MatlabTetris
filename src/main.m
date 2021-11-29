@@ -36,6 +36,11 @@ rotateKeyMaxTime = 2;
 rotateKeyTimer = 0;
 rotateKeyTimerPlayer2 = 0;
 
+%Used for snap fall
+snapKeyMaxTime = 5;
+snapKeyTimer = 0;
+snapKeyTimerPlayer2 = 0;
+
 %Starts music
 audioPlayer = startMusicTrack("../res/original.mp3");
 
@@ -104,7 +109,7 @@ while playing
     else
     
         %Moving the tetromino down.
-        [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed);
+        [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 0);
     
 
          if(keyHandler.getKeyState(keyHandler.Keys.f1))
@@ -113,7 +118,7 @@ while playing
 
         player2GameOver = false;
         if(isMultiplayer)
-            [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2);
+            [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 0);
 
             %If the game is multiplayer then clearingRows gives rows to your oponenet.
             if(clearedRows == 2)
@@ -192,18 +197,14 @@ while playing
 
             %If the down key is pressed for player 1.
             if(keyHandler.getKeyState(keyHandler.Keys.s))
-                wasDownJustPressed = true;
-                if(tetro.maxTicsUntilFall ~= pieceFastFallSpeed)
-                    tetro.maxTicsUntilFall = pieceFastFallSpeed;
-                    tetro.ticsUntilFall = 0;
+                if(~snapKeyTimer)
+                    snapKeyTimer = snapKeyMaxTime;
+                    [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 1);
+                else
+                    snapKeyTimer = snapKeyTimer - 1;
                 end
-            end
-
-            %If the down key is released for player 1.
-            if (wasDownJustPressed && ~keyHandler.getKeyState(keyHandler.Keys.s))
-                wasDownJustPressed = false;
-                tetro.maxTicsUntilFall = pieceSpeed;
-                tetro.ticsUntilFall = pieceSpeed;
+            else
+                snapKeyTimer = 0;
             end
 
             %If the rotate key is pressed for player 1.
@@ -230,18 +231,14 @@ while playing
 
             %If the down key is pressed for player 2.
             if(keyHandler.getKeyState(keyHandler.Keys.downArrow))
-                wasDownJustPressedPlayer2 = true;
-                if(tetroPlayer2.maxTicsUntilFall ~= pieceFastFallSpeed)
-                    tetroPlayer2.maxTicsUntilFall = pieceFastFallSpeed;
-                    tetroPlayer2.ticsUntilFall = 0;
+                if(~snapKeyTimerPlayer2)
+                    snapKeyTimerPlayer2 = snapKeyMaxTime;
+                     [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 1);
+                else
+                    snapKeyTimerPlayer2 = snapKeyTimerPlayer2 - 1;
                 end
-            end
-
-            %If the down key is released for player 2.
-            if (wasDownJustPressedPlayer2 && ~keyHandler.getKeyState(keyHandler.Keys.downArrow))
-                wasDownJustPressedPlayer2 = false;
-                tetroPlayer2.maxTicsUntilFall = pieceSpeedPlayer2;
-                tetroPlayer2.ticsUntilFall = pieceSpeedPlayer2;
+            else
+                snapKeyTimerPlayer2 = 0;
             end
 
             %If the rotate key is pressed for player 2.
