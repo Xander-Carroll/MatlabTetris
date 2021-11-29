@@ -203,39 +203,62 @@ classdef GameBoard
         end
 
         %Called on each tetro piece every frame to move it down the screen.
-        function [obj, tetro, gameOver, clearedRows] = movePieceDown(obj, tetro, speed)
-            [obj, obj.collided] = tetro.move('d', obj);
+        function [obj, tetro, gameOver, clearedRows] = movePieceDown(obj, tetro, speed, multi)
+            if ~multi
+                [obj, obj.collided] = tetro.move('d', obj);
+                clearedRows = 0;
+                gameOver = false;
 
-            clearedRows = 0;
-            
-            gameOver = false;
-
-            %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
-            if (obj.collided)
-                if(obj.collideTimer > 0)
-                    obj.collideTimer = obj.collideTimer - 1;
-                else
-                    obj.collideTimer = obj.collideTimerMax;
-
-                    if (obj.isGameOver())
-                        gameOver = true;
-                        obj = obj.generateTitleBoard();
+                %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
+                if (obj.collided)
+                    if(obj.collideTimer > 0)
+                        obj.collideTimer = obj.collideTimer - 1;
                     else
-                        tetro = Tetromino();
-                        tetro.maxTicsUntilFall = speed;
-                        obj.collided = false;
-    
-                        [obj, clearedRows] = obj.clearCompleteRows();
+                        obj.collideTimer = obj.collideTimerMax;
 
-                        obj = obj.addRows();
+                        if (obj.isGameOver())
+                            gameOver = true;
+                            obj = obj.generateTitleBoard();
+                        else
+                            tetro = Tetromino();
+                            tetro.maxTicsUntilFall = speed;
+                            obj.collided = false;
+
+                            [obj, clearedRows] = obj.clearCompleteRows();
+
+                            obj = obj.addRows();
+                        end
+
                     end
 
+                else
+                    obj.collideTimer = obj.collideTimerMax;
                 end
-    
             else
+                [obj, obj.collided] = tetro.move('d', obj);
+                clearedRows = 0;
+                gameOver = false;
+                
+                while ~obj.collided
+                     [obj, obj.collided] = tetro.move('d', obj);
+                end
+                
                 obj.collideTimer = obj.collideTimerMax;
+
+                if (obj.isGameOver())
+                    gameOver = true;
+                    obj = obj.generateTitleBoard();
+                else
+                    tetro = Tetromino();
+                    tetro.maxTicsUntilFall = speed;
+                    obj.collided = false;
+
+                    [obj, clearedRows] = obj.clearCompleteRows();
+
+                    obj = obj.addRows();
+                end
+                
             end
-    
         end
 
         %This method takes the position of a current piece before and after moving and updates the board matrix appropriatley.
