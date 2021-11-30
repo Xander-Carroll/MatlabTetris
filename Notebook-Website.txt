@@ -1,17 +1,17 @@
-Welcome Page - Table of Contents										-
-Welcome Page - Executive Summary										-
-Project Management Document - Team Working Agreement					- Done (Needs Signed?)
+Welcome Page - Table of Contents										                -
+Welcome Page - Executive Summary										                -
+Project Management Document - Team Working Agreement					      - Done (Needs Signed?)
 Project Management Document - Individual Responsibility Agreement		- Needs Comments
-Project Management Document - Project Schedule							- Needs Final Rows
-Project Management Document - Meeting Notes								- 
-Business Plan - User Identification and Interviews						- Done
-Business Plan - Electronic/Print Advertisement							-
-Software Documentation - Introduction									- 
-Software Documentation - User Manual									-
-Software Documentation - Program Description for Developers				-
-Software Documentation - Algorithm, Flowchart or Pseudocode				-
-Software Documentation - Final Program with Comments					-
-Software Documentation - Discussion										-
-Software Documentation - Conclusions and Recommedations					-
-Software Documentation - References										-
-Extra Credit															- Done
+Project Management Document - Project Schedule							        - Needs Final Rows
+Project Management Document - Meeting Notes								          - 
+Business Plan - User Identification and Interviews						      - Done
+Business Plan - Electronic/Print Advertisement							        -
+Software Documentation - Introduction									              - 
+Software Documentation - User Manual									              -
+Software Documentation - Program Description for Developers				  -
+Software Documentation - Algorithm, Flowchart or Pseudocode				  -
+Software Documentation - Final Program with Comments					      -
+Software Documentation - Discussion										              -
+Software Documentation - Conclusions and Recommedations					    -
+Software Documentation - References										              -
+Extra Credit															                          - Done
