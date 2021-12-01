@@ -8,12 +8,9 @@ classdef GameBoard
         collided = false;
         collideTimerMax = 5;
         collideTimer = 5;
-        
-        %Used for adding rows in multiplayer versues.
-        quedRows = 0;
+        backgroundBoard
 
         %Variables used to display the title screen.
-        backgroundBoard
         titleBackgroundColor = 1;
 
         titleTickCounter = 0;
@@ -39,23 +36,13 @@ classdef GameBoard
         
         %Edits the supplied gameBoard object to make it show a title screen.
         function obj = generateTitleBoard(obj)
+
+            
              obj.board = uint8(ones(23,18));
 
-            for x = 2:17
-                obj.board(4, x) = 57;
-                obj.board(23, x) = 51;
-            end
+           
 
-            for y = 5:22
-                obj.board(y, 1) = 50;
-                obj.board(y, 18) = 56;
-            end
-
-            obj.board(4, 1) = 52;
-            obj.board(23, 1) = 54;
-
-            obj.board(4, 18) = 53;
-            obj.board(23, 18) = 55;
+      
 
             
             obj.board(8,7) = 23;%M
@@ -64,6 +51,16 @@ classdef GameBoard
             obj.board(8,10) = 22;%L
             obj.board(8,11) = 11;%A
             obj.board(8,12) = 12;%B
+            
+            
+            for x = 7:12
+                obj.backgroundBoard(8,x) = 60;
+            end
+            
+            for x = 7:12
+                obj.backgroundBoard(9,x) = 61;
+            end
+            
   
             obj.board(9,7) = 30;%T
             obj.board(9,8) = 15;%E
@@ -72,34 +69,20 @@ classdef GameBoard
             obj.board(9,11) = 19;%I
             obj.board(9,12) = 29;%S
 
-            %Sideways T pieces by the MATLAB and TETRIS
-            obj.board(8,6) = 56;
-            obj.board(8,13) = 50;
-            obj.board(9,6) = 56;
-            obj.board(9,13) = 50;
             
-            %for x = 2:17
-            %    obj.board(11, x) = 48;
-            %    obj.board(12, x) = 47;
-            %end
+            
         
             %matlab logo
             for x = 7: 12
             obj.board(7,x) = 48;
             end
-            %obj.board(7,6) = 48;
-            %obj.board(8,6) = 48;
-            %obj.board(7,13) = 48;
-            %obj.board(8,13) = 48;
+
             
             %tetris logo
             for x = 7: 12
             obj.board(10,x) = 47;
             end
-            %obj.board(10,6) = 47;
-            %obj.board(10,13) = 47;
-            %obj.board(9,6) = 47;
-            %obj.board(9,13) = 47;
+
             
 
             obj.board(15,3) = 29;%S
@@ -162,103 +145,131 @@ classdef GameBoard
             
             %%single
             
-            for z = 3:16 %upside down T
+            for z = 3:6 %upside down T
+                 obj.board(14,z) = 51;
+            end
+            for z = 14:16 %upside down T
                  obj.board(14,z) = 51;
             end
             
             
-            for z = 7:12 %regualr T
-                obj.board(17,z) = 57;
-            end
+
 
             for z = 1:3 %regualr T
                 obj.board(16,z+2) = 57;
                 obj.board(16,z+13) = 57;
             end
+                
+            %%Iron Bars
 
-            %%multi
-            for z = 1:2 %regualr T
-                obj.board(20,z+3) = 57;
-                obj.board(20,z+13) = 57;
+            obj.board(20,z+3) = 57;
+
+            for x = 4:5
+                obj.board(20,x) = 57;
+                obj.board(18,x) = 51;
             end
-      
-
-            for z = 4:15 %upside down T
-                obj.board(18,z) = 51;
+            for x = 14:15
+                obj.board(20,x) = 57;
+                obj.board(18,x) = 51;
             end
-            for z = 7:12 %regualr T
-                obj.board(21,z) = 57;
+            obj.board(20,6) = 53;
+            obj.board(18,6) = 55;
+            obj.board(14,6) = 55;
+            obj.board(20,13) = 52;
+            obj.board(18,13) = 54;
+            obj.board(14,13) = 54;
+
+            obj.board(17,6) = 56;
+            obj.board(17,13) = 50;
+
+            obj.board(4, 1) = 52;
+            obj.board(23, 1) = 54;
+
+            obj.board(4, 18) = 53;
+            obj.board(23, 18) = 55;
+
+            %Border
+            for x = 2:6
+                obj.board(4, x) = 57;
+                obj.board(23, x) = 51;
+            end
+            for x = 13:17
+                obj.board(4, x) = 57;
+                obj.board(23, x) = 51;
+            end
+
+            for x = 7:12
+                obj.board(4, x) = 58;
+                obj.board(23, x) = 58;
+            end
+
+            for y = 5:22
+                obj.board(y, 1) = 50;
+                obj.board(y, 18) = 56;
             end
 
 
+
+            %Sideways T pieces by the MATLAB and TETRIS
+            
+            for y = 5:13
+                obj.board(y,6) = 56;
+                obj.board(y,13) = 50;
+            end
+            for y = 21:22
+                obj.board(y,6) = 56;
+                obj.board(y,13) = 50;
+            end
+
+
+            %fill the rest
             for y = 1:23
-                for x = 1:18
+                for x = 1:6
+                    if obj.board(y,x) == 1
+                        obj.board(y,x) = 49;
+                    end
+                end
+                for x = 13:18
                     if obj.board(y,x) == 1
                         obj.board(y,x) = 49;
                     end
                 end
             end
+
             
-            obj.board = obj.board;
+            
         end
 
         %Called on each tetro piece every frame to move it down the screen.
-        function [obj, tetro, gameOver, clearedRows] = movePieceDown(obj, tetro, speed, multi)
-            if ~multi
-                [obj, obj.collided] = tetro.move('d', obj);
-                clearedRows = 0;
-                gameOver = false;
+        function [obj, tetro, gameOver] = movePieceDown(obj, tetro, speed)
+            [obj, obj.collided] = tetro.move('d', obj);
 
-                %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
-                if (obj.collided)
-                    if(obj.collideTimer > 0)
-                        obj.collideTimer = obj.collideTimer - 1;
-                    else
-                        obj.collideTimer = obj.collideTimerMax;
+            gameOver = false;
 
-                        if (obj.isGameOver())
-                            gameOver = true;
-                            obj = obj.generateTitleBoard();
-                        else
-                            tetro = Tetromino();
-                            tetro.maxTicsUntilFall = speed;
-                            obj.collided = false;
-
-                            [obj, clearedRows] = obj.clearCompleteRows();
-
-                            obj = obj.addRows();
-                        end
-
-                    end
-
+            %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
+            if (obj.collided)
+                if(obj.collideTimer > 0)
+                    obj.collideTimer = obj.collideTimer - 1;
                 else
                     obj.collideTimer = obj.collideTimerMax;
+
+                    if (obj.isGameOver())
+                        gameOver = true;
+                        obj = obj.generateTitleBoard();
+                    else
+                        tetro = Tetromino();
+                        tetro.maxTicsUntilFall = speed;
+                        obj.collided = false;
+    
+                        obj = obj.clearCompleteRows();
+                    end
+
                 end
+    
             else
-                [obj, obj.collided] = tetro.move('d', obj);
-                clearedRows = 0;
-                gameOver = false;
-                
-                while ~obj.collided
-                     [obj, obj.collided] = tetro.move('d', obj);
-                end
-                
                 obj.collideTimer = obj.collideTimerMax;
-
-                if (obj.isGameOver())
-                    gameOver = true;
-                    obj = obj.generateTitleBoard();
-                else
-                    tetro = Tetromino();
-                    tetro.maxTicsUntilFall = speed;
-                    obj.collided = false;
-
-                    [obj, clearedRows] = obj.clearCompleteRows();
-
-                    obj = obj.addRows();
-                end
-                
             end
+    
         end
 
         %This method takes the position of a current piece before and after moving and updates the board matrix appropriatley.
@@ -286,9 +297,7 @@ classdef GameBoard
         end
 
         %This function should be called when a piece lands to determine if any lines need to be cleared.
-        function [obj, totalLinesCleared] = clearCompleteRows(obj)
-            totalLinesCleared = 0;
-
+        function obj = clearCompleteRows(obj)
             for y = 1:length(obj.board(:,1))
                 lineClear = true;
 
@@ -303,37 +312,8 @@ classdef GameBoard
                 if lineClear
                     obj.board((2:y),:) = obj.board((1:y-1), :);
                     obj.board(1,:) = uint8(ones(1,10));
-                    totalLinesCleared = totalLinesCleared + 1;
                 end
             end
-
-        end
-
-        %This function is called after a piece lands to add rows to board. (Used in multiplayer versues).
-        %Note: Do not call this function to add lines. Call queExtraRows().
-        function [obj] = addRows(obj)
-            %Provides overflow protection incase a player needs more rows than are provided in the board.
-            if(obj.quedRows > 20)
-               obj.quedRows = 20;
-            end
-
-            obj.board(1:23-obj.quedRows, :) = obj.board(obj.quedRows+1:23, :);
-            
-            obj.board(24-obj.quedRows:23, :) = 1;
-
-            for i = 1:obj.quedRows
-                hole = randi(10);
-                obj.board(23-obj.quedRows+i, :) = 9;
-                obj.board(23-obj.quedRows+i, hole) = 1;
-            end
-
-            obj.quedRows = 0;
-
-        end
-
-        %This function will add rows to the oponents screen. (Used in multiplayer versues.)
-        function obj = queExtraRows(obj, numRows)
-            obj.quedRows = obj.quedRows + numRows;
         end
 
         %This function should be called when a piece lands to determine if the player has lost.

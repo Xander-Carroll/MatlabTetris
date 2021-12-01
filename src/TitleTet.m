@@ -52,10 +52,10 @@ classdef TitleTet < handle
         
         function randX(obj)
             if obj.isLeft
-                obj.locationX = randi(5) + 1;
+                obj.locationX = randi(6);
                 obj.locationY = 1;
             else
-                obj.locationX = randi(5) + 12;
+                obj.locationX = randi(6) + 12;
                 obj.locationY = 1;
             end
         end

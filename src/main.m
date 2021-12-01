@@ -1,6 +1,6 @@
 %RUN THIS FILE TO START THE GAME
 
-%Developed by Danny, Matt, and Xander. Engineering 1181 SDP.
+%Developed by Danny, Matt, Xander, and Blake. Engineering 1181 SDP.
 
 clear; clc;
 fprintf("Engineering 1181 SDP: Tetris V:1.1.0\n");
@@ -30,16 +30,6 @@ pieceFastFallSpeed = 0;
 %Used for fastfall.
 wasDownJustPressed = false;
 wasDownJustPressedPlayer2 = false;
-
-%Used to rotate pieces.
-rotateKeyMaxTime = 2;
-rotateKeyTimer = 0;
-rotateKeyTimerPlayer2 = 0;
-
-%Used for snap fall
-snapKeyMaxTime = 5;
-snapKeyTimer = 0;
-snapKeyTimerPlayer2 = 0;
 
 %Starts music
 audioPlayer = startMusicTrack("../res/original.mp3");
@@ -94,12 +84,6 @@ while playing
             framerate = inGameFramerate;
         end
 
-        %If the escape key is pressed the game exits.
-        if(keyHandler.getKeyState(keyHandler.Keys.escape))
-            close(gameScene.my_figure);
-            playing = false;
-        end
-
         %If the f1 key is pressed change the music.
         if(keyHandler.getKeyState(keyHandler.Keys.f1))
             audioPlayer = startMusicTrack("../res/remix.mp3");
@@ -109,40 +93,11 @@ while playing
     else
     
         %Moving the tetromino down.
-        [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 0);
+        [gameBoard, tetro, player1GameOver] = gameBoard.movePieceDown(tetro, pieceSpeed);
     
-
-         if(keyHandler.getKeyState(keyHandler.Keys.f1))
-            gameBoard = gameBoard.queExtraRows(22);
-         end
-
         player2GameOver = false;
         if(isMultiplayer)
-            [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 0);
-
-            %If the game is multiplayer then clearingRows gives rows to your oponenet.
-            if(clearedRows == 2)
-                clearedRows = 0;
-                gameBoardPlayer2 = gameBoardPlayer2.queExtraRows(1);
-            elseif (clearedRows == 3)
-                clearedRows = 0;
-                gameBoardPlayer2 = gameBoardPlayer2.queExtraRows(2);
-            elseif (clearedRows == 4)
-                clearedRows = 0;
-                gameBoardPlayer2 = gameBoardPlayer2.queExtraRows(4);
-            end
-
-            %If the game is multiplayer then clearingRows gives rows to your oponenet.
-            if(clearedRowsPlayer2 == 2)
-                clearedRowsPlayer2 = 0;
-                gameBoard= gameBoard.queExtraRows(1);
-            elseif (clearedRowsPlayer2 == 3)
-                clearedRowsPlayer2 = 0;
-                gameBoard = gameBoard.queExtraRows(2);
-            elseif (clearedRowsPlayer2 == 4)
-                clearedRowsPlayer2 = 0;
-                gameBoard = gameBoard.queExtraRows(4);
-            end
+            [gameBoardPlayer2, tetroPlayer2, player2GameOver] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2);
         end
         
         %Handle Key Input
@@ -175,14 +130,7 @@ while playing
 
             %If the rotate key is pressed.
             if(keyHandler.getKeyState(keyHandler.Keys.w) || keyHandler.getKeyState(keyHandler.Keys.upArrow))
-                if(rotateKeyTimer == 0)
-                    rotateKeyTimer = rotateKeyMaxTime;
-                    gameBoard = tetro.rotate(gameBoard);
-                else
-                    rotateKeyTimer = rotateKeyTimer - 1;
-                end
-            else
-                rotateKeyTimer = 0;
+                gameBoard = tetro.rotate(gameBoard);
             end
         else
             %If the left key is pressed for player 1.
@@ -197,26 +145,23 @@ while playing
 
             %If the down key is pressed for player 1.
             if(keyHandler.getKeyState(keyHandler.Keys.s))
-                if(~snapKeyTimer)
-                    snapKeyTimer = snapKeyMaxTime;
-                    [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 1);
-                else
-                    snapKeyTimer = snapKeyTimer - 1;
+                wasDownJustPressed = true;
+                if(tetro.maxTicsUntilFall ~= pieceFastFallSpeed)
+                    tetro.maxTicsUntilFall = pieceFastFallSpeed;
+                    tetro.ticsUntilFall = 0;
                 end
-            else
-                snapKeyTimer = 0;
+            end
+
+            %If the down key is released for player 1.
+            if (wasDownJustPressed && ~keyHandler.getKeyState(keyHandler.Keys.s))
+                wasDownJustPressed = false;
+                tetro.maxTicsUntilFall = pieceSpeed;
+                tetro.ticsUntilFall = pieceSpeed;
             end
 
             %If the rotate key is pressed for player 1.
             if(keyHandler.getKeyState(keyHandler.Keys.w))
-                if(rotateKeyTimer == 0)
-                    rotateKeyTimer = rotateKeyMaxTime;
-                    gameBoard = tetro.rotate(gameBoard);
-                else
-                    rotateKeyTimer = rotateKeyTimer - 1;
-                end
-            else
-                rotateKeyTimer = 0;
+                gameBoard = tetro.rotate(gameBoard);
             end
 
             %If the left key is pressed for player 2.
@@ -231,33 +176,24 @@ while playing
 
             %If the down key is pressed for player 2.
             if(keyHandler.getKeyState(keyHandler.Keys.downArrow))
-                if(~snapKeyTimerPlayer2)
-                    snapKeyTimerPlayer2 = snapKeyMaxTime;
-                     [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 1);
-                else
-                    snapKeyTimerPlayer2 = snapKeyTimerPlayer2 - 1;
+                wasDownJustPressedPlayer2 = true;
+                if(tetroPlayer2.maxTicsUntilFall ~= pieceFastFallSpeed)
+                    tetroPlayer2.maxTicsUntilFall = pieceFastFallSpeed;
+                    tetroPlayer2.ticsUntilFall = 0;
                 end
-            else
-                snapKeyTimerPlayer2 = 0;
+            end
+
+            %If the down key is released for player 2.
+            if (wasDownJustPressedPlayer2 && ~keyHandler.getKeyState(keyHandler.Keys.downArrow))
+                wasDownJustPressedPlayer2 = false;
+                tetroPlayer2.maxTicsUntilFall = pieceSpeedPlayer2;
+                tetroPlayer2.ticsUntilFall = pieceSpeedPlayer2;
             end
 
             %If the rotate key is pressed for player 2.
-            if(keyHandler.getKeyState(keyHandler.Keys.upArrow))
-                if(rotateKeyTimerPlayer2 == 0)
-                    rotateKeyTimerPlayer2 = rotateKeyMaxTime;
-                    gameBoardPlayer2 = tetroPlayer2.rotate(gameBoardPlayer2);
-                else
-                    rotateKeyTimerPlayer2 = rotateKeyTimerPlayer2 - 1;
-                end
-            else
-                rotateKeyTimerPlayer2 = 0;
+            if (keyHandler.getKeyState(keyHandler.Keys.upArrow))
+                gameBoardPlayer2 = tetroPlayer2.rotate(gameBoardPlayer2);
             end
-        end
-
-        %If the escape key is pressed the game returns to the title screen 
-        if(keyHandler.getKeyState(keyHandler.Keys.escape))
-            inTitleScreen = true;
-            gameBoard = gameBoard.generateTitleBoard();
         end
 
         %Checking for a game over.
@@ -266,6 +202,12 @@ while playing
             gameBoard = gameBoard.generateTitleBoard();
         end
 
+    end
+
+    %If the escape key is pressed the game closes.
+    if(keyHandler.getKeyState(keyHandler.Keys.escape))
+        inTitleScreen = true;
+        gameBoard = gameBoard.generateTitleBoard();
     end
 
     %This pause limits the fps based on the framerate variable.
