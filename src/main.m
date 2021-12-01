@@ -111,10 +111,10 @@ while playing
             gameScene = loadNewTileset(gameScene, "../res/NewTiles.png", gameBoard, keyHandler);
         end
 
+   %Game logic.
     else
-    
         %Moving the tetromino down.
-        [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, keyHandler, 1);
+        [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 1, keyHandler);
     
 
          if(keyHandler.getKeyState(keyHandler.Keys.f1))
@@ -123,7 +123,7 @@ while playing
 
         player2GameOver = false;
         if(isMultiplayer)
-            [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, keyHandler, 2);
+            [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 2, keyHandler);
 
             %If the game is multiplayer then clearingRows gives rows to your oponenet.
             if(clearedRows == 2)

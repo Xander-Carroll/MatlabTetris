@@ -203,7 +203,7 @@ classdef GameBoard
         end
 
         %Called on each tetro piece every frame to move it down the screen.
-        function [obj, tetro, gameOver, clearedRows] = movePieceDown(obj, tetro, speed, keyHandler, currentPlayer)
+        function [obj, tetro, gameOver, clearedRows] = movePieceDown(obj, tetro, speed, currentPlayer, keyHandler)
             [obj, obj.collided] = tetro.move('d', obj);
             clearedRows = 0;
             gameOver = false;
