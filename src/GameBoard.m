@@ -229,7 +229,7 @@ classdef GameBoard
 
                         if (currentPlayer == 2)
                             keyHandler.currentKeys(keyHandler.Keys.downArrow) = false;
-                        else
+                        elseif(currentPlayer == 1)
                             keyHandler.currentKeys(keyHandler.Keys.s) = false;
                         end
 
