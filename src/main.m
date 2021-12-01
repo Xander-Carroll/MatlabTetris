@@ -13,6 +13,7 @@ gameBoard = gameBoard.generateTitleBoard();
 gameBoardPlayer2 = GameBoard();
 gameBoardPlayer2.board = uint8(ones(23,10));
 
+%Initializing the game engine and connecting the keyHandler.
 keyHandler = KeyHandler();
 gameScene = initGameEngine('../res/OldTiles.png', gameBoard, keyHandler);
 
@@ -40,11 +41,6 @@ wasDownJustPressedPlayer2 = false;
 rotateKeyMaxTime = 2;
 rotateKeyTimer = 0;
 rotateKeyTimerPlayer2 = 0;
-
-%Used for snap fall
-snapKeyMaxTime = 5;
-snapKeyTimer = 0;
-snapKeyTimerPlayer2 = 0;
 
 %Starts music
 audioPlayer = startMusicTrack("../res/original.mp3");
@@ -115,11 +111,6 @@ while playing
     else
         %Moving the tetromino down.
         [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 1, keyHandler);
-    
-
-         if(keyHandler.getKeyState(keyHandler.Keys.f1))
-            gameBoard = gameBoard.queExtraRows(22);
-         end
 
         player2GameOver = false;
         if(isMultiplayer)
@@ -150,7 +141,7 @@ while playing
             end
         end
         
-        %Handle Key Input
+        %Handle Key Input for Single Player
         if(~isMultiplayer)
             %If the left key is pressed.
             if(keyHandler.getKeyState(keyHandler.Keys.a) || keyHandler.getKeyState(keyHandler.Keys.leftArrow))
@@ -189,6 +180,8 @@ while playing
             else
                 rotateKeyTimer = 0;
             end
+
+        %Handle key input for Multiplayer
         else
             %If the left key is pressed for player 1.
             if(keyHandler.getKeyState(keyHandler.Keys.a))
@@ -289,6 +282,7 @@ while playing
     %This pause limits the fps based on the framerate variable.
     pause(1/framerate-toc);
     
+    %Drawing the current fps.
     delete(fpsText);
     if(showFpsCounter)
         fpsText = text(20, 30, "FPS: " + string(1/toc), 'Color', [1,1,1]);
@@ -299,8 +293,10 @@ end
 stop(audioPlayer);
 delete(audioPlayer);
 
+%Clears the workspace and command window after the program finishes.
 clear; clc;
 
+%Used to load an image to a simpleGameENgine file.
 function gameScene = loadNewTileset(gameScene, filePath, gameBoard, keyHandler)
     close(gameScene.my_figure);
     pause(0.1);
@@ -310,6 +306,7 @@ function gameScene = loadNewTileset(gameScene, filePath, gameBoard, keyHandler)
     figure(gameScene.my_figure);
 end
 
+%This method sets up callback methods and initializes a simpleGameEngine.
 function gameScene = initGameEngine(filePath, gameBoard, keyHandler)
     %The main game scene. This will need to be drawn to every frame.
     gameScene = SimpleGameEngine(filePath,32,32,1,[0,0,0]);
