@@ -203,71 +203,43 @@ classdef GameBoard
         end
 
         %Called on each tetro piece every frame to move it down the screen.
-        function [obj, tetro, gameOver, clearedRows] = movePieceDown(obj, tetro, speed, multi, keyHandler, currentPlayer)
-            if ~multi
-                [obj, obj.collided] = tetro.move('d', obj);
-                clearedRows = 0;
-                gameOver = false;
-
-                %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
-                if (obj.collided)
-                    if(obj.collideTimer > 0)
-                        obj.collideTimer = obj.collideTimer - 1;
-                    else
-                        obj.collideTimer = obj.collideTimerMax;
-
-                        if (obj.isGameOver())
-                            gameOver = true;
-                            obj = obj.generateTitleBoard();
-                        else
-                            tetro = Tetromino();
-                            tetro.maxTicsUntilFall = speed;
-                            obj.collided = false;
-
-                            keyHandler.currentKeys(keyHandler.Keys.downArrow) = false;
-                            keyHandler.currentKeys(keyHandler.Keys.s) = false;
-
-                            [obj, clearedRows] = obj.clearCompleteRows();
-
-                            obj = obj.addRows();
-                        end
-
-                    end
-
+        function [obj, tetro, gameOver, clearedRows] = movePieceDown(obj, tetro, speed, keyHandler, currentPlayer)
+            [obj, obj.collided] = tetro.move('d', obj);
+            clearedRows = 0;
+            gameOver = false;
+            %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
+            if (obj.collided)
+                if(obj.collideTimer > 0)
+                    obj.collideTimer = obj.collideTimer - 1;
                 else
                     obj.collideTimer = obj.collideTimerMax;
+                    if (obj.isGameOver())
+                        gameOver = true;
+                        obj = obj.generateTitleBoard();
+                    else
+                        tetro = Tetromino();
+                        tetro.maxTicsUntilFall = speed;
+                        obj.collided = false;
+
+                        if (currentPlayer == 2)
+                            keyHandler.currentKeys(keyHandler.Keys.downArrow) = false;
+                        else
+                            keyHandler.currentKeys(keyHandler.Keys.s) = false;
+                        end
+
+                        [obj, clearedRows] = obj.clearCompleteRows();
+                        obj = obj.addRows();
+                    end
                 end
             else
-                [obj, obj.collided] = tetro.move('d', obj);
-                clearedRows = 0;
-                gameOver = false;
-                
-                while ~obj.collided
-                     [obj, obj.collided] = tetro.move('d', obj);
-                end
-                
                 obj.collideTimer = obj.collideTimerMax;
-
-                if (obj.isGameOver())
-                    gameOver = true;
-                    obj = obj.generateTitleBoard();
-                else
-                    tetro = Tetromino();
-                    tetro.maxTicsUntilFall = speed;
-                    obj.collided = false;
-
-                    [obj, clearedRows] = obj.clearCompleteRows();
-
-                    if(currentPlayer == 1)
-                        keyHandler.currentKeys(keyHandler.Keys.s) = false;
-                    else
-                        keyHandler.currentKeys(keyHandler.Keys.downArrow) = false;
-                    end
-
-                    obj = obj.addRows();
-                end
-                
             end
+           
+                
+%                 while ~obj.collided
+%                      [obj, obj.collided] = tetro.move('d', obj);
+%                 end
+                
         end
 
         %This method takes the position of a current piece before and after moving and updates the board matrix appropriatley.

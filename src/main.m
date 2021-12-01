@@ -6,11 +6,6 @@ clear; clc;
 fprintf("Engineering 1181 SDP: Tetris V:1.1.0\n");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%The main game framerate target. (If you set the framerate too high the game won't close).
-inGameFramerate = 15;
-inTitleFramerate = 10;
-framerate = 10; 
-
 %The main game board that will hold a gird of pieces.
 gameBoard = GameBoard();
 gameBoard = gameBoard.generateTitleBoard();
@@ -20,6 +15,16 @@ gameBoardPlayer2.board = uint8(ones(23,10));
 
 keyHandler = KeyHandler();
 gameScene = initGameEngine('../res/OldTiles.png', gameBoard, keyHandler);
+
+%The main game framerate target. (If you set the framerate too high the game won't close).
+inGameFramerate = 15;
+inTitleFramerate = 10;
+framerate = 10; 
+
+%Variables that will be used to determine if fps should be shown.
+showFpsCounter = false;
+fpsText = text(20, 30, "FPS: 0", 'Color', [1,1,1]);
+delete(fpsText);
 
 %The speed at which the pieces fall. A smaller speed make faster pieces.
 pieceSpeed = 5;
@@ -109,7 +114,7 @@ while playing
     else
     
         %Moving the tetromino down.
-        [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 0, keyHandler, 1);
+        [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, keyHandler, 1);
     
 
          if(keyHandler.getKeyState(keyHandler.Keys.f1))
@@ -118,7 +123,7 @@ while playing
 
         player2GameOver = false;
         if(isMultiplayer)
-            [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 0, keyHandler, 2);
+            [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, keyHandler, 2);
 
             %If the game is multiplayer then clearingRows gives rows to your oponenet.
             if(clearedRows == 2)
@@ -199,7 +204,7 @@ while playing
             if(keyHandler.getKeyState(keyHandler.Keys.s))
                 if(~snapKeyTimer)
                     snapKeyTimer = snapKeyMaxTime;
-                    [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 1, keyHandler, 1);
+                    [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, keyHandler, 1);
                 else
                     snapKeyTimer = snapKeyTimer - 1;
                 end
@@ -233,7 +238,7 @@ while playing
             if(keyHandler.getKeyState(keyHandler.Keys.downArrow))
                 if(~snapKeyTimerPlayer2)
                     snapKeyTimerPlayer2 = snapKeyMaxTime;
-                     [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 1, keyHandler, 2);
+                     [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, keyHandler, 2);
                 else
                     snapKeyTimerPlayer2 = snapKeyTimerPlayer2 - 1;
                 end
@@ -268,16 +273,25 @@ while playing
 
     end
 
+    %If the f2 key is pressed the game toggles the fps counter. 
+    if(keyHandler.getKeyState(keyHandler.Keys.f2))
+        showFpsCounter = ~showFpsCounter;
+    end
+
     %This pause limits the fps based on the framerate variable.
     pause(1/framerate-toc);
-    %fprintf("Framerate: %f\n", 1/toc); %TODO REMOVE: Unccoment this line to see framerate.
+    
+    delete(fpsText);
+    if(showFpsCounter)
+        fpsText = text(20, 30, "FPS: " + string(1/toc), 'Color', [1,1,1]);
+    end
 end
 
 %Stops the audio from playing after the program finishes.
 stop(audioPlayer);
 delete(audioPlayer);
 
-%TODO UNCOMMENT: clear; clc;
+clear; clc;
 
 function gameScene = loadNewTileset(gameScene, filePath, gameBoard, keyHandler)
     close(gameScene.my_figure);
@@ -319,5 +333,6 @@ end
 %Handels window close events. (When the window close button is pressed this function is called).
 function closeCallback(src, ~)
     assignin('base', 'playing', false);
+    assignin('base', "showFpsCounter", false);
     delete(src);
 end
