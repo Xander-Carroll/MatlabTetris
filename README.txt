@@ -20,14 +20,18 @@ folder contains assets such as art and sound files that are needed to run the ga
 
 Fourthly, the controls of the game are as follows:
 
-Title Screen:           Single Player:                  Multiplayer:
-1 - Single Player       w/up - Rotate Piece             w/a/s/d - Player 1 Controls
+Title Screen:           Single Player:                  Multiplayer:                                All:
+1 - Single Player       w/up - Rotate Piece             w/a/s/d - Player 1 Controls                 f2 - Show FPS Counter     
 0 - Multiplayer         a/left arrow - Move Left        up/left/down/right - Player 2 Controls
 esc - Close Game        s/down arrow - Fastfall         esc - Exit to Title Screen
 f1 - Easter Egg         d/right arrow - Move Right
                         esc - Exit to Title Screen  
 
-Finally the purpose of the following files will be briefly summarized:
+Fithly, It is woth mentioning that the AI player utilizes snap fall, a mechanic 
+that the player was not given. This adds a layer of difficulty to the AI making 
+this AI player a true challenge.
+
+Finally, the purpose of the following files will be briefly summarized:
 
 GameBoard.m - A class that can be used to create a grid that will hold pieces. 
     The class also contains various functions used for displaying the board.
