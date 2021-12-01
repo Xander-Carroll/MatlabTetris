@@ -1,3 +1,4 @@
+%This class controls the tetromino pieces in game
 classdef Tetromino < handle
 
     properties
@@ -257,7 +258,8 @@ classdef Tetromino < handle
     end
 end
 
-function adj = rotadjust(loc) % adjusts piece to stay in bounds
+%This function adjusts piece to stay in bounds when they try to rotate
+function adj = rotadjust(loc) 
     xs = loc(2:2:8);
     ys = loc(1:2:8);
 
@@ -285,6 +287,7 @@ function adj = rotadjust(loc) % adjusts piece to stay in bounds
     adj = loc;
 end
 
+%This function checks if a rotation will cause a collision
 function collided = checkRotCollide(obj, loc, board)
     for i = 1:2:8
         cont = false;
@@ -304,6 +307,7 @@ function collided = checkRotCollide(obj, loc, board)
     collided = false;
 end
 
+%This function checks if a piece has collided
 function collided = checkCollide(obj, gameboard, dir)
     loc = obj.locations;   
     board = gameboard.board;

@@ -1,3 +1,32 @@
+%{
+Variables:
+(int)(matrix)board - holds the numbers for the sprites on the board 
+(boolean)collided - has the piece collided with another 
+(int)collideTimerMax - the max and default number for collideTimer
+(int)collideTimer - current timer of how long a piece has been collided
+with another
+(int)(matrix)backgroundBoard - holds the numbers for the sprites on the
+background board
+(int)titleBackgroundColor - sprite number of the background
+(int)titleTickCounter - counts the number of game ticks while in the title
+screen
+(int)tetCounter - counts the number of tet pieces in the title screen
+(boolean)isSpawning - are the pieces in the title screen still spawning (Are there 16)
+(TitleTet)(matrix)titleTetPieces - matrix of TitleTet pieces on the title
+screen
+(boolean)gameover - is the game over 
+(Tetromino)tetro - a Tetromino piece
+(int)(matrix)visibleBoard - holds the numbers for the sprites on the
+visible board
+(int)(matrix)visibleBackBoard - holds the numbers for the sprites on the
+visible backgroundboard
+(boolean)lineclear - does a line need to be cleared
+(int)(matrix)returnboard - returns a two player board
+(int)(matrix)board1 - first player's board
+(int)(matrix)board2 - second player's board
+(int)playercount - keeps track of the number of players
+%}
+
 %This class controls what is displayed and contains a grid that keeps track of sprites on the screen
 classdef GameBoard
     

@@ -1,3 +1,5 @@
+
+
 %This class is called and decides what to do when there is keyboard input
 classdef KeyHandler < handle
     properties (Constant)

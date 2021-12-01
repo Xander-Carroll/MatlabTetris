@@ -221,6 +221,7 @@ delete(audioPlayer);
 
 %TODO UNCOMMENT: clear; clc;
 
+%This function starts the easter egg version of the game
 function gameScene = loadNewTileset(gameScene, filePath, gameBoard, keyHandler)
     close(gameScene.my_figure);
     pause(0.1);
@@ -230,6 +231,7 @@ function gameScene = loadNewTileset(gameScene, filePath, gameBoard, keyHandler)
     figure(gameScene.my_figure);
 end
 
+%This function initializes the game engine and scene
 function gameScene = initGameEngine(filePath, gameBoard, keyHandler)
     %The main game scene. This will need to be drawn to every frame.
     gameScene = SimpleGameEngine(filePath,32,32,1,[0,0,0]);
