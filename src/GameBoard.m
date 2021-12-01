@@ -207,6 +207,12 @@ classdef GameBoard
             [obj, obj.collided] = tetro.move('d', obj);
             clearedRows = 0;
             gameOver = false;
+
+            %If the current player is the AI it uses snap fall to instantly drop pieces.
+            while ~obj.collided && currentPlayer == 3
+                [obj, obj.collided] = tetro.move('d', obj);
+            end
+
             %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
             if (obj.collided)
                 if(obj.collideTimer > 0)
@@ -235,11 +241,6 @@ classdef GameBoard
                 obj.collideTimer = obj.collideTimerMax;
             end
            
-                
-%                 while ~obj.collided
-%                      [obj, obj.collided] = tetro.move('d', obj);
-%                 end
-                
         end
 
         %This method takes the position of a current piece before and after moving and updates the board matrix appropriatley.
