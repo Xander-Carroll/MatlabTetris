@@ -203,7 +203,7 @@ classdef GameBoard
         end
 
         %Called on each tetro piece every frame to move it down the screen.
-        function [obj, tetro, gameOver, clearedRows] = movePieceDown(obj, tetro, speed, multi)
+        function [obj, tetro, gameOver, clearedRows] = movePieceDown(obj, tetro, speed, multi, keyHandler, currentPlayer)
             if ~multi
                 [obj, obj.collided] = tetro.move('d', obj);
                 clearedRows = 0;
@@ -223,6 +223,9 @@ classdef GameBoard
                             tetro = Tetromino();
                             tetro.maxTicsUntilFall = speed;
                             obj.collided = false;
+
+                            keyHandler.currentKeys(keyHandler.Keys.downArrow) = false;
+                            keyHandler.currentKeys(keyHandler.Keys.s) = false;
 
                             [obj, clearedRows] = obj.clearCompleteRows();
 
@@ -254,6 +257,12 @@ classdef GameBoard
                     obj.collided = false;
 
                     [obj, clearedRows] = obj.clearCompleteRows();
+
+                    if(currentPlayer == 1)
+                        keyHandler.currentKeys(keyHandler.Keys.s) = false;
+                    else
+                        keyHandler.currentKeys(keyHandler.Keys.downArrow) = false;
+                    end
 
                     obj = obj.addRows();
                 end

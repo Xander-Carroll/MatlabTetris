@@ -109,7 +109,7 @@ while playing
     else
     
         %Moving the tetromino down.
-        [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 0);
+        [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 0, keyHandler, 1);
     
 
          if(keyHandler.getKeyState(keyHandler.Keys.f1))
@@ -118,7 +118,7 @@ while playing
 
         player2GameOver = false;
         if(isMultiplayer)
-            [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 0);
+            [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 0, keyHandler, 2);
 
             %If the game is multiplayer then clearingRows gives rows to your oponenet.
             if(clearedRows == 2)
@@ -199,7 +199,7 @@ while playing
             if(keyHandler.getKeyState(keyHandler.Keys.s))
                 if(~snapKeyTimer)
                     snapKeyTimer = snapKeyMaxTime;
-                    [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 1);
+                    [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 1, keyHandler, 1);
                 else
                     snapKeyTimer = snapKeyTimer - 1;
                 end
@@ -233,7 +233,7 @@ while playing
             if(keyHandler.getKeyState(keyHandler.Keys.downArrow))
                 if(~snapKeyTimerPlayer2)
                     snapKeyTimerPlayer2 = snapKeyMaxTime;
-                     [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 1);
+                     [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 1, keyHandler, 2);
                 else
                     snapKeyTimerPlayer2 = snapKeyTimerPlayer2 - 1;
                 end
