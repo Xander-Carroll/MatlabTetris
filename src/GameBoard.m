@@ -17,6 +17,9 @@ classdef GameBoard
         tetCounter = 1;
         isSpawning = true;
         titleTetPieces = TitleTet();
+
+        %Variables to keep score
+        playerScore = 0;
     end
     
     methods
@@ -26,6 +29,7 @@ classdef GameBoard
             obj.board = uint8(ones(25,18));
             obj.backgroundBoard = uint8(ones(25,18));
             obj.backgroundBoard(:) = obj.titleBackgroundColor;
+            
 
             %This loop is used to create the titleTet pieces used to animate the title screen.
             for i = 1:16
@@ -225,10 +229,27 @@ classdef GameBoard
             
         end
         
-        function updateScore() 
-            
-        end
+        %This function displays the score
+        function returnBoard = updateScore(obj) 
+            obj.board(24,:) = 9;
+            obj.board(25,5:6) = 46;
 
+            if obj.playerScore < 10 && obj.playerScore > 0
+                obj.board(25,6) = obj.playerScore + 36;
+            elseif obj.playerScore < 100 && obj.playerScore >= 10
+                if ~mod(obj.playerScore, 10) == 0
+                    obj.board(25,6) = mod(obj.playerScore, 10) + 36;
+                end
+                obj.board(25,5) = floor(obj.playerScore / 10) + 36;
+            end
+            returnBoard = obj.board;
+        end
+            
+        %This function resets the score when the game is over
+        function obj = resetScore(obj)
+            obj.playerScore = 0;
+        end
+        
         %Called on each tetro piece every frame to move it down the screen.
         function [obj, tetro, gameOver] = movePieceDown(obj, tetro, speed)
             [obj, obj.collided] = tetro.move('d', obj);
@@ -279,6 +300,7 @@ classdef GameBoard
         %This function returns a board that dosent show those three rows.
         function visibileBoard = getVisibleBoard(obj)
             visibileBoard = obj.board(4:25, :);
+            
         end
         
         function visibleBackBoard = getVisibleBackBoard(obj)
@@ -287,7 +309,9 @@ classdef GameBoard
 
         %This function should be called when a piece lands to determine if any lines need to be cleared.
         function obj = clearCompleteRows(obj)
-            for y = 1:length(obj.board(:,1))
+            linesClearedCount = 0;
+
+            for y = 1:23
                 lineClear = true;
 
                 %Determines if a line needs cleared.
@@ -301,8 +325,20 @@ classdef GameBoard
                 if lineClear
                     obj.board((2:y),:) = obj.board((1:y-1), :);
                     obj.board(1,:) = uint8(ones(1,10));
+                    linesClearedCount = linesClearedCount + 1;
                 end
             end
+
+            if (linesClearedCount == 1) 
+                obj.playerScore = obj.playerScore + 1;
+            elseif (linesClearedCount == 2)
+                obj.playerScore = obj.playerScore + 3;
+            elseif (linesClearedCount == 3)
+                obj.playerScore = obj.playerScore + 5;
+            elseif (linesClearedCount == 4)
+                obj.playerScore = obj.playerScore + 8;
+            end
+           
         end
 
         %This function should be called when a piece lands to determine if the player has lost.
