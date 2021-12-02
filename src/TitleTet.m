@@ -25,7 +25,7 @@ classdef TitleTet < handle
 
         %moves the object down 1 space
         function moveDown(obj)
-            if obj.locationY == 23
+            if obj.locationY == 25
                 obj.locationY = 1;
                 obj.randX();
                 newColor(obj);

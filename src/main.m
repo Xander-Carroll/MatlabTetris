@@ -16,7 +16,7 @@ gameBoard = GameBoard();
 gameBoard = gameBoard.generateTitleBoard();
 
 gameBoardPlayer2 = GameBoard();
-gameBoardPlayer2.board = uint8(ones(23,10));
+gameBoardPlayer2.board = uint8(ones(25,10));
 
 keyHandler = KeyHandler();
 gameScene = initGameEngine('../res/OldTiles.png', gameBoard, keyHandler);
@@ -71,8 +71,8 @@ while playing
                 isMultiplayer = true;
             end
 
-            gameBoard.board = uint8(ones(23,10));
-            gameBoardPlayer2.board = uint8(ones(23,10));
+            gameBoard.board = uint8(ones(25,10));
+            gameBoardPlayer2.board = uint8(ones(25,10));
             inTitleScreen = false;
     
             tetro = Tetromino();

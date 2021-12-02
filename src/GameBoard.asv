@@ -55,12 +55,12 @@ classdef GameBoard
 
             %matlab logo
             for x = 7: 12
-                obj.board(7,x) = 48;
+            obj.board(7,x) = 48;
             end
  
             %tetris logo
             for x = 7: 12
-                obj.board(10,x) = 47;
+            obj.board(10,x) = 47;
             end
 
             
@@ -108,8 +108,8 @@ classdef GameBoard
             obj.board(20,11) = 29;%S
             obj.board(20,12) = 46;%0
 
-            obj.board(23,9) = 11;%A
-            obj.board(23,10) = 19;%I
+            obj.board(23,9) = 26;%A 23
+            obj.board(23,7) = 26;%I
 
             obj.board(24,7) = 26;%P
             obj.board(24,8) = 28;%R
@@ -157,13 +157,6 @@ classdef GameBoard
                 obj.board(18,x) = 51;
             end
             obj.board(20,6) = 53;
-
-            obj.board(23,6) = 56;
-            obj.board(24,6) = 56;
-
-            obj.board(23,13) = 50;
-            obj.board(24,13) = 50;
-
             obj.board(18,6) = 55;
             obj.board(14,6) = 55;
             obj.board(20,13) = 52;
@@ -174,27 +167,27 @@ classdef GameBoard
             obj.board(17,13) = 50;
 
             obj.board(4, 1) = 52;
-            obj.board(25, 1) = 54;
+            obj.board(23, 1) = 54;
 
             obj.board(4, 18) = 53;
-            obj.board(25, 18) = 55;
+            obj.board(23, 18) = 55;
 
             %Border/edge
             for x = 2:6
                 obj.board(4, x) = 57;
-                obj.board(25, x) = 51;
+                obj.board(23, x) = 51;
             end
             for x = 13:17
                 obj.board(4, x) = 57;
-                obj.board(25, x) = 51;
+                obj.board(23, x) = 51;
             end
 
             for x = 7:12
                 obj.board(4, x) = 58;
-                obj.board(25, x) = 58;
+                obj.board(23, x) = 58;
             end
 
-            for y = 5:24
+            for y = 5:22
                 obj.board(y, 1) = 50;
                 obj.board(y, 18) = 56;
             end
@@ -210,7 +203,7 @@ classdef GameBoard
             end
 
             %fill the rest with crosses
-            for y = 1:25
+            for y = 1:23
                 for x = 1:6
                     if obj.board(y,x) == 1
                         obj.board(y,x) = 49;
@@ -222,10 +215,6 @@ classdef GameBoard
                     end
                 end
             end
-            
-        end
-        
-        function updateScore() 
             
         end
 
