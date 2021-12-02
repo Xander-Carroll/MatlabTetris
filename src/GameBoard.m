@@ -8,9 +8,12 @@ classdef GameBoard
         collided = false;
         collideTimerMax = 5;
         collideTimer = 5;
-        backgroundBoard
+        
+        %Used for adding rows in multiplayer versues.
+        quedRows = 0;
 
         %Variables used to display the title screen.
+        backgroundBoard
         titleBackgroundColor = 1;
 
         titleTickCounter = 0;
@@ -200,10 +203,15 @@ classdef GameBoard
         end
 
         %Called on each tetro piece every frame to move it down the screen.
-        function [obj, tetro, gameOver] = movePieceDown(obj, tetro, speed)
+        function [obj, tetro, gameOver, clearedRows] = movePieceDown(obj, tetro, speed, currentPlayer, keyHandler)
             [obj, obj.collided] = tetro.move('d', obj);
-
+            clearedRows = 0;
             gameOver = false;
+
+            %If the current player is the AI it uses snap fall to instantly drop pieces.
+            while ~obj.collided && currentPlayer == 3
+                [obj, obj.collided] = tetro.move('d', obj);
+            end
 
             %Once a piece has landed it is determined if the player has lost, if any lines have been cleared, and creates a new tetro.
             if (obj.collided)
@@ -211,7 +219,6 @@ classdef GameBoard
                     obj.collideTimer = obj.collideTimer - 1;
                 else
                     obj.collideTimer = obj.collideTimerMax;
-
                     if (obj.isGameOver())
                         gameOver = true;
                         obj = obj.generateTitleBoard();
@@ -219,16 +226,21 @@ classdef GameBoard
                         tetro = Tetromino();
                         tetro.maxTicsUntilFall = speed;
                         obj.collided = false;
-    
-                        obj = obj.clearCompleteRows();
-                    end
 
+                        if (currentPlayer == 2)
+                            keyHandler.currentKeys(keyHandler.Keys.downArrow) = false;
+                        elseif(currentPlayer == 1)
+                            keyHandler.currentKeys(keyHandler.Keys.s) = false;
+                        end
+
+                        [obj, clearedRows] = obj.clearCompleteRows();
+                        obj = obj.addRows();
+                    end
                 end
-    
             else
                 obj.collideTimer = obj.collideTimerMax;
             end
-    
+           
         end
 
         %This method takes the position of a current piece before and after moving and updates the board matrix appropriatley.
@@ -256,7 +268,9 @@ classdef GameBoard
         end
 
         %This function should be called when a piece lands to determine if any lines need to be cleared.
-        function obj = clearCompleteRows(obj)
+        function [obj, totalLinesCleared] = clearCompleteRows(obj)
+            totalLinesCleared = 0;
+
             for y = 1:length(obj.board(:,1))
                 lineClear = true;
 
@@ -271,8 +285,37 @@ classdef GameBoard
                 if lineClear
                     obj.board((2:y),:) = obj.board((1:y-1), :);
                     obj.board(1,:) = uint8(ones(1,10));
+                    totalLinesCleared = totalLinesCleared + 1;
                 end
             end
+
+        end
+
+        %This function is called after a piece lands to add rows to board. (Used in multiplayer versues).
+        %Note: Do not call this function to add lines. Call queExtraRows().
+        function [obj] = addRows(obj)
+            %Provides overflow protection incase a player needs more rows than are provided in the board.
+            if(obj.quedRows > 20)
+               obj.quedRows = 20;
+            end
+
+            obj.board(1:23-obj.quedRows, :) = obj.board(obj.quedRows+1:23, :);
+            
+            obj.board(24-obj.quedRows:23, :) = 1;
+
+            for i = 1:obj.quedRows
+                hole = randi(10);
+                obj.board(23-obj.quedRows+i, :) = 9;
+                obj.board(23-obj.quedRows+i, hole) = 1;
+            end
+
+            obj.quedRows = 0;
+
+        end
+
+        %This function will add rows to the oponents screen. (Used in multiplayer versues.)
+        function obj = queExtraRows(obj, numRows)
+            obj.quedRows = obj.quedRows + numRows;
         end
 
         %This function should be called when a piece lands to determine if the player has lost.

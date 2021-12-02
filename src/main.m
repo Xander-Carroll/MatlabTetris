@@ -6,11 +6,6 @@ clear; clc;
 fprintf("Engineering 1181 SDP: Tetris V:1.1.0\n");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%The main game framerate target. (If you set the framerate too high the game won't close).
-inGameFramerate = 15;
-inTitleFramerate = 10;
-framerate = 10; 
-
 %The main game board that will hold a gird of pieces.
 gameBoard = GameBoard();
 gameBoard = gameBoard.generateTitleBoard();
@@ -18,8 +13,19 @@ gameBoard = gameBoard.generateTitleBoard();
 gameBoardPlayer2 = GameBoard();
 gameBoardPlayer2.board = uint8(ones(23,10));
 
+%Initializing the game engine and connecting the keyHandler.
 keyHandler = KeyHandler();
 gameScene = initGameEngine('../res/OldTiles.png', gameBoard, keyHandler);
+
+%The main game framerate target. (If you set the framerate too high the game won't close).
+inGameFramerate = 15;
+inTitleFramerate = 10;
+framerate = 10; 
+
+%Variables that will be used to determine if fps should be shown.
+showFpsCounter = false;
+fpsText = text(20, 30, "FPS: 0", 'Color', [1,1,1]);
+delete(fpsText);
 
 %The speed at which the pieces fall. A smaller speed make faster pieces.
 pieceSpeed = 5;
@@ -30,6 +36,11 @@ pieceFastFallSpeed = 0;
 %Used for fastfall.
 wasDownJustPressed = false;
 wasDownJustPressedPlayer2 = false;
+
+%Used to rotate pieces.
+rotateKeyMaxTime = 2;
+rotateKeyTimer = 0;
+rotateKeyTimerPlayer2 = 0;
 
 %Starts music
 audioPlayer = startMusicTrack("../res/original.mp3");
@@ -84,23 +95,53 @@ while playing
             framerate = inGameFramerate;
         end
 
+        %If the escape key is pressed the game exits.
+        if(keyHandler.getKeyState(keyHandler.Keys.escape))
+            close(gameScene.my_figure);
+            playing = false;
+        end
+
         %If the f1 key is pressed change the music.
         if(keyHandler.getKeyState(keyHandler.Keys.f1))
             audioPlayer = startMusicTrack("../res/remix.mp3");
             gameScene = loadNewTileset(gameScene, "../res/NewTiles.png", gameBoard, keyHandler);
         end
 
+   %Game logic.
     else
-    
         %Moving the tetromino down.
-        [gameBoard, tetro, player1GameOver] = gameBoard.movePieceDown(tetro, pieceSpeed);
-    
+        [gameBoard, tetro, player1GameOver, clearedRows] = gameBoard.movePieceDown(tetro, pieceSpeed, 1, keyHandler);
+
         player2GameOver = false;
         if(isMultiplayer)
-            [gameBoardPlayer2, tetroPlayer2, player2GameOver] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2);
+            [gameBoardPlayer2, tetroPlayer2, player2GameOver, clearedRowsPlayer2] = gameBoardPlayer2.movePieceDown(tetroPlayer2, pieceSpeedPlayer2, 2, keyHandler);
+
+            %If the game is multiplayer then clearingRows gives rows to your oponenet.
+            if(clearedRows == 2)
+                clearedRows = 0;
+                gameBoardPlayer2 = gameBoardPlayer2.queExtraRows(1);
+            elseif (clearedRows == 3)
+                clearedRows = 0;
+                gameBoardPlayer2 = gameBoardPlayer2.queExtraRows(2);
+            elseif (clearedRows == 4)
+                clearedRows = 0;
+                gameBoardPlayer2 = gameBoardPlayer2.queExtraRows(4);
+            end
+
+            %If the game is multiplayer then clearingRows gives rows to your oponenet.
+            if(clearedRowsPlayer2 == 2)
+                clearedRowsPlayer2 = 0;
+                gameBoard= gameBoard.queExtraRows(1);
+            elseif (clearedRowsPlayer2 == 3)
+                clearedRowsPlayer2 = 0;
+                gameBoard = gameBoard.queExtraRows(2);
+            elseif (clearedRowsPlayer2 == 4)
+                clearedRowsPlayer2 = 0;
+                gameBoard = gameBoard.queExtraRows(4);
+            end
         end
         
-        %Handle Key Input
+        %Handle Key Input for Single Player
         if(~isMultiplayer)
             %If the left key is pressed.
             if(keyHandler.getKeyState(keyHandler.Keys.a) || keyHandler.getKeyState(keyHandler.Keys.leftArrow))
@@ -118,7 +159,7 @@ while playing
                 if(tetro.maxTicsUntilFall ~= pieceFastFallSpeed)
                     tetro.maxTicsUntilFall = pieceFastFallSpeed;
                     tetro.ticsUntilFall = 0;
-                end
+                end  
             end
 
             %If the down key is released.
@@ -130,8 +171,17 @@ while playing
 
             %If the rotate key is pressed.
             if(keyHandler.getKeyState(keyHandler.Keys.w) || keyHandler.getKeyState(keyHandler.Keys.upArrow))
-                gameBoard = tetro.rotate(gameBoard);
+                if(rotateKeyTimer == 0)
+                    rotateKeyTimer = rotateKeyMaxTime;
+                    gameBoard = tetro.rotate(gameBoard);
+                else
+                    rotateKeyTimer = rotateKeyTimer - 1;
+                end
+            else
+                rotateKeyTimer = 0;
             end
+
+        %Handle key input for Multiplayer
         else
             %If the left key is pressed for player 1.
             if(keyHandler.getKeyState(keyHandler.Keys.a))
@@ -161,7 +211,14 @@ while playing
 
             %If the rotate key is pressed for player 1.
             if(keyHandler.getKeyState(keyHandler.Keys.w))
-                gameBoard = tetro.rotate(gameBoard);
+                if(rotateKeyTimer == 0)
+                    rotateKeyTimer = rotateKeyMaxTime;
+                    gameBoard = tetro.rotate(gameBoard);
+                else
+                    rotateKeyTimer = rotateKeyTimer - 1;
+                end
+            else
+                rotateKeyTimer = 0;
             end
 
             %If the left key is pressed for player 2.
@@ -183,7 +240,7 @@ while playing
                 end
             end
 
-            %If the down key is released for player 2.
+            %If the down key is released for player 1.
             if (wasDownJustPressedPlayer2 && ~keyHandler.getKeyState(keyHandler.Keys.downArrow))
                 wasDownJustPressedPlayer2 = false;
                 tetroPlayer2.maxTicsUntilFall = pieceSpeedPlayer2;
@@ -191,9 +248,22 @@ while playing
             end
 
             %If the rotate key is pressed for player 2.
-            if (keyHandler.getKeyState(keyHandler.Keys.upArrow))
-                gameBoardPlayer2 = tetroPlayer2.rotate(gameBoardPlayer2);
+            if(keyHandler.getKeyState(keyHandler.Keys.upArrow))
+                if(rotateKeyTimerPlayer2 == 0)
+                    rotateKeyTimerPlayer2 = rotateKeyMaxTime;
+                    gameBoardPlayer2 = tetroPlayer2.rotate(gameBoardPlayer2);
+                else
+                    rotateKeyTimerPlayer2 = rotateKeyTimerPlayer2 - 1;
+                end
+            else
+                rotateKeyTimerPlayer2 = 0;
             end
+        end
+
+        %If the escape key is pressed the game returns to the title screen 
+        if(keyHandler.getKeyState(keyHandler.Keys.escape))
+            inTitleScreen = true;
+            gameBoard = gameBoard.generateTitleBoard();
         end
 
         %Checking for a game over.
@@ -204,23 +274,29 @@ while playing
 
     end
 
-    %If the escape key is pressed the game closes.
-    if(keyHandler.getKeyState(keyHandler.Keys.escape))
-        inTitleScreen = true;
-        gameBoard = gameBoard.generateTitleBoard();
+    %If the f2 key is pressed the game toggles the fps counter. 
+    if(keyHandler.getKeyState(keyHandler.Keys.f2))
+        showFpsCounter = ~showFpsCounter;
     end
 
     %This pause limits the fps based on the framerate variable.
     pause(1/framerate-toc);
-    %fprintf("Framerate: %f\n", 1/toc); %TODO REMOVE: Unccoment this line to see framerate.
+    
+    %Drawing the current fps.
+    delete(fpsText);
+    if(showFpsCounter)
+        fpsText = text(20, 30, "FPS: " + string(1/toc), 'Color', [1,1,1]);
+    end
 end
 
 %Stops the audio from playing after the program finishes.
 stop(audioPlayer);
 delete(audioPlayer);
 
-%TODO UNCOMMENT: clear; clc;
+%Clears the workspace and command window after the program finishes.
+clear; clc;
 
+%Used to load an image to a simpleGameENgine file.
 function gameScene = loadNewTileset(gameScene, filePath, gameBoard, keyHandler)
     close(gameScene.my_figure);
     pause(0.1);
@@ -230,6 +306,7 @@ function gameScene = loadNewTileset(gameScene, filePath, gameBoard, keyHandler)
     figure(gameScene.my_figure);
 end
 
+%This method sets up callback methods and initializes a simpleGameEngine.
 function gameScene = initGameEngine(filePath, gameBoard, keyHandler)
     %The main game scene. This will need to be drawn to every frame.
     gameScene = SimpleGameEngine(filePath,32,32,1,[0,0,0]);
@@ -261,5 +338,6 @@ end
 %Handels window close events. (When the window close button is pressed this function is called).
 function closeCallback(src, ~)
     assignin('base', 'playing', false);
+    assignin('base', "showFpsCounter", false);
     delete(src);
 end
