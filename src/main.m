@@ -63,15 +63,21 @@ while playing
 
     %Rendering the game scene.
     if(isMultiplayer && ~inTitleScreen)
+        gameBoard.board = gameBoard.updateScore(); %updates the score
+        gameBoardPlayer2.board = gameBoardPlayer2.updateScore(); %updates the score
         drawScene(gameScene, gameBoard.createTwoPlayerBoard(gameBoardPlayer2))
     elseif (inTitleScreen)
         drawScene(gameScene, gameBoard.getVisibleBackBoard(), gameBoard.getVisibleBoard());
     else
+        gameBoard.board = gameBoard.updateScore(); %updates the score
         drawScene(gameScene, gameBoard.getVisibleBoard());
     end
 
     %Logic for the title screen.
     if (inTitleScreen)
+        gameBoard = gameBoard.resetScore();
+        gameBoardPlayer2 = gameBoardPlayer2.resetScore();
+
         framerate = inTitleFramerate;
         [gameBoard, playerCount] = gameBoard.renderTitleScreen(keyHandler);
 
@@ -82,8 +88,8 @@ while playing
                 isMultiplayer = true;
             end
 
-            gameBoard.board = uint8(ones(23,10));
-            gameBoardPlayer2.board = uint8(ones(23,10));
+            gameBoard.board = uint8(ones(25,10));
+            gameBoardPlayer2.board = uint8(ones(25,10));
             inTitleScreen = false;
     
             tetro = Tetromino();
