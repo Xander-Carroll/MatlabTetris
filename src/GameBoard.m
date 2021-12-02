@@ -425,6 +425,8 @@ classdef GameBoard
                 playerCount = 1;
             elseif(keyHandler.getKeyState(keyHandler.Keys.key0))
                 playerCount = 2;
+            elseif(keyHandler.getKeyState(keyHandler.Keys.key2))
+                playerCount = 3;
             else
                 for i = 1:16 %update titletet locations
                     if obj.titleTetPieces(i).isOnBoard == true
