@@ -87,6 +87,7 @@ while playing
             if(playerCount == 1)
                 isMultiplayer = false;
             else
+                pieceSpeedPlayer2 = 5;
                 isMultiplayer = true;
             end
             
